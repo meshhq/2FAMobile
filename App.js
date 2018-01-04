@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import CodeListView from './CodeListView'
 
+import QRScanner from './QRScanner'
+
 export default class App extends React.Component {
   render() {
     return (
@@ -13,7 +15,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#82b1ff',
     alignItems: 'center',
     justifyContent: 'center',
   },

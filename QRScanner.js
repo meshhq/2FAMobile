@@ -1,15 +1,19 @@
 import React from 'react'
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
-import { Camera, Permissions } from 'expo'
+import {
+    Text, 
+    View, 
+    StyleSheet,
+    Dimensions,
+    Alert
+} from 'react-native'
+import { BarCodeScanner, Permissions } from 'expo'
 
 export default class QRScanner extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            hasCameraPermission: null,
-            type: Camera.Constants.Type.back
-        }
+    state = {
+        hasCameraPermission: null,
+        lastScannedString: '',
+        alertShowing: false
     }
 
     async componentWillMount() {
@@ -17,13 +21,14 @@ export default class QRScanner extends React.Component {
         this.setState({ hasCameraPermission: status === 'granted' })
     }
 
-    switchCamera() {
-        this.setState({
-            type: this.state.type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back,
-        });
+    handleQRCodeResult = (result) => {
+        if (this.state.alertShowing === false) {
+            Alert.alert('Scan Success!', JSON.stringify(result))
+            this.setState({ alertShowing: true })
+        }
     }
 
-    render() {
+    render = () => {
         const { hasCameraPermission } = this.state
         if (hasCameraPermission === null) {
             return <View />
@@ -36,15 +41,7 @@ export default class QRScanner extends React.Component {
         } else {
             return (
                 <View style={ styles.container }>
-                    <Camera style={{ flex: 1 }} type={this.state.type}>
-                        <View style={ styles.bottomBar }>
-                            <TouchableOpacity style={ styles.switchCameraButton } onPress={ this.switchCamera }>
-                                <Text style={ styles.switchCameraText }>
-                                    Filp
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Camera>
+                    <BarCodeScanner style={{ flex: 1 }} onBarCodeRead={ this.handleQRCodeResult } />
                 </View>
             )
         }
@@ -55,23 +52,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    barCodeStyle: {
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
+    },
     noAccessText: {
         fontSize: 20,
         textAlign: 'center'
-    },
-    bottomBar: {
-        flex: 1,
-        backgroundColor: 'transparent',
-        flexDirection: 'row'
-    },
-    switchCameraButton: {
-        flex: 0.1,
-        alignSelf: 'flex-end',
-        alignItems: 'center'
-    },
-    switchCameraText: {
-        fontSize: 18,
-        marginBottom: 10,
-        color: 'white'
     }
 })

@@ -24,28 +24,41 @@ const rightBarButtonConfig = {
 
 export default class CodeListView extends React.Component {
 
+    /**
+     * 'refreshing' is required as a prop for the built in "Pull to Refresh" on the
+     * FlatList. 'data' will be used to populate the FlatList cells.
+     */
     state = {
         refreshing: false, 
         data: []
     }
 
+    /**
+     * Will refresh the flatlist data when the Component mounts.
+     */
     async componentWillMount() {
         return this.refreshData()
     } 
 
-    refreshData = async () => {
-        await CodeModel.getAllCodes().then((result) => {
-            const restoredArray = JSON.parse(result)
-            this.setState({ data: restoredArray })
-        })
-    }
-
-    async tryAddCode() {
+    /**
+     * Will add a new Code Model to the local store.
+     */
+    async addCode() {
         try {
             await CodeModel.addCode()
         } catch (error) {
             console.log('Set Item Error', JSON.stringify(error.message))
         }
+    }
+
+    /**
+     * Will retrieve all the Codes from the local store and refresh the table.
+     */
+    refreshData = async () => {
+        await CodeModel.getAllCodes().then((result) => {
+            const restoredArray = JSON.parse(result)
+            this.setState({ data: restoredArray })
+        })
     }
 
     render() {
@@ -56,7 +69,7 @@ export default class CodeListView extends React.Component {
                     rightButton={ rightBarButtonConfig }
                 />
                 <Button 
-                 onPress={ this.tryAddCode }
+                 onPress={ this.addCode }
                  title='Add Dummy Code'
                 />
                 <FlatList
@@ -71,19 +84,14 @@ export default class CodeListView extends React.Component {
         )
     }
 
+    /**
+     * Create the view used as a separator.
+     */
     renderSeparator() {
         return (
             <View style={ styles.separator }/>
         )
     }
-
-    renderItemHandler = ({ item }) => (
-        <ListItem
-            roundAvatar
-            title={item}
-            subtitle={'test'}
-        />
-    )
 }
 
 const styles = StyleSheet.create({

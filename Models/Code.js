@@ -40,6 +40,11 @@ export default class CodeModel {
         })
     }
 
+    /**
+     * Will remove a value for a given key.
+     * Note: This is pretty ugly but it'll be removed later on.
+     * @param {string} key 
+     */
     static async removeCodeForKey(key) {
         await CodeModel.getAllCodes().then((result) => {
             if (!result) {

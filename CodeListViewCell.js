@@ -1,7 +1,9 @@
 import React from 'react'
 
-import { 
+import {
+    TouchableOpacity,
     StyleSheet, 
+    Image,
     View,
     Text
 } from 'react-native'
@@ -9,10 +11,22 @@ import {
 export default class CodeListViewCell extends React.PureComponent {
 
     render() {
-        return <View style={ styles.container }>
-            <Text style={ styles.titleLabel }>{this.props.title}</Text>
-            <Text style={ styles.subtitleLabel }>Date: 00/00/0000</Text>
-        </View>
+        return <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
+            <View>
+                <Text style={ styles.titleLabel }>{this.props.title}</Text>
+                <Text style={ styles.subtitleLabel }>Date: 00/00/0000</Text>
+            </View>
+            <View>
+                <Image
+                    style={ styles.imageStyle }
+                    source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+                />
+            </View>
+        </TouchableOpacity>
+    }
+
+    cellPressed = () => {
+        alert('Push Cell Detail VC')
     }
 
 }
@@ -20,7 +34,16 @@ export default class CodeListViewCell extends React.PureComponent {
 const styles = StyleSheet.create({
     container: {
         height: 100,
-        backgroundColor: '#fcfcfc'
+        backgroundColor: '#fcfcfc',
+        justifyContent: 'space-between',
+        flexDirection:'row'
+    },
+    imageStyle: {
+        borderRadius: 25,
+        marginTop: 20,
+        marginRight: 8,
+        width: 50,
+        height: 50
     },
     titleLabel: {
         color: '#63acff',

@@ -30,7 +30,7 @@ export default class CodeListView extends React.Component {
     }
 
     async componentWillMount() {
-       return this.refreshData()
+        return this.refreshData()
     } 
 
     refreshData = async () => {
@@ -57,16 +57,23 @@ export default class CodeListView extends React.Component {
                 />
                 <Button 
                  onPress={ this.tryAddCode }
-                 title='Test Button'
+                 title='Add Dummy Code'
                 />
                 <FlatList
                     data={ this.state.data }
-                    renderItem={({item}) => <CodeListViewCell title={item.date} />}
+                    renderItem={({item}) => <CodeListViewCell title={item.key} />}
                     keyExtractor={(item, index) => index}
                     refreshing= { this.state.refreshing }
                     onRefresh={ this.refreshData }
+                    ItemSeparatorComponent={this.renderSeparator}
                 />
             </View>
+        )
+    }
+
+    renderSeparator() {
+        return (
+            <View style={ styles.separator }/>
         )
     }
 
@@ -91,5 +98,10 @@ const styles = StyleSheet.create({
     },
     flatList: {
         margin: 8
+    },
+    separator: {
+        height: 1,
+        width: "100%",
+        backgroundColor: "#CED0CE"
     }
 })

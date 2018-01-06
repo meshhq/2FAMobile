@@ -11,6 +11,7 @@ export default class CodeListViewCell extends React.PureComponent {
     render() {
         return <View style={ styles.container }>
             <Text style={ styles.titleLabel }>{this.props.title}</Text>
+            <Text style={ styles.subtitleLabel }>Date: 00/00/0000</Text>
         </View>
     }
 
@@ -18,16 +19,18 @@ export default class CodeListViewCell extends React.PureComponent {
 
 const styles = StyleSheet.create({
     container: {
-        margin: 8,
-        height: 44,
-        backgroundColor: '#bababa',
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: 'black'
+        height: 100,
+        backgroundColor: '#fcfcfc'
     },
     titleLabel: {
-        color: '#efefef',
-        fontSize: 16,
+        color: '#63acff',
+        fontSize: 40,
+        paddingTop: 12,
+        paddingLeft: 8
+    },
+    subtitleLabel: {
+        color: '#000000',
+        fontSize: 12,
         paddingTop: 12,
         paddingLeft: 8
     }

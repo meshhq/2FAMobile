@@ -11,16 +11,8 @@ import {
 
 import NavigationBar from 'react-native-navbar'
 import CodeListViewCell from './CodeListViewCell'
+import QRScanner from './QRScanner'
 import CodeModel from './Models/Code'
-
-const titleConfig = {
-    title: 'My Codes'
-}
-
-const rightBarButtonConfig = {
-    title: 'Camera',
-    handler: () => alert('Push Camera VC')
-}
 
 export default class CodeListView extends React.Component {
 
@@ -31,6 +23,19 @@ export default class CodeListView extends React.Component {
     state = {
         refreshing: false, 
         data: []
+    }
+
+    titleConfig = {
+        title: 'My Codes'
+    }
+    
+    rightBarButtonConfig = {
+        title: 'Camera',
+        handler: () => {
+            this.props.navigator.push({
+                component: QRScanner
+            })
+        }
     }
 
     /**
@@ -65,8 +70,8 @@ export default class CodeListView extends React.Component {
         return (
             <View style={ styles.container }>
                 <NavigationBar 
-                    title={ titleConfig }
-                    rightButton={ rightBarButtonConfig }
+                    title={ this.titleConfig }
+                    rightButton={ this.rightBarButtonConfig }
                 />
                 <Button 
                  onPress={ this.addCode }

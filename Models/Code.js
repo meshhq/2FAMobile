@@ -6,9 +6,9 @@ export default class CodeModel {
 
     /**
      * Will fetch the existing codes and append the new code.
+     * codeData will include the QR url and the date the code was scanned.
      */
-    static async addCode() {
-        const data = CodeModel.createDummyData()
+    static async addCode(codeData) {
         await CodeModel.getAllCodes().then((result) => {
             let resultArray
             if (!result) {
@@ -16,11 +16,8 @@ export default class CodeModel {
             } else {
                 resultArray = JSON.parse(result)
             }
-
-            // Dummy data needs to be replaced by network call
-            const dummyData = CodeModel.createDummyData()
             
-            resultArray.push(dummyData)
+            resultArray.push(codeData)
             
             try {
                 const dataString = JSON.stringify(resultArray)
@@ -69,10 +66,14 @@ export default class CodeModel {
         })
     }
 
-    static createDummyData() {
-        const number = Math.floor(Math.random() * 90000) + 10000;
-        return {
-            key: number.toString()
+    /**
+     * Used in DEV mode only to wipe the store clean.
+     */
+    static async removeAllCodes() {
+        try {
+            await AsyncStorage.removeItem(codeKey)            
+        } catch (error) {
+            console.log('Error Removing All Codes: ', error)
         }
     }
 

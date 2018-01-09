@@ -19,11 +19,17 @@ export default class QRScanner extends React.Component {
         alertShowing: false
     }
 
+    /**
+     * Check that camera permission status in componentWillMount()
+     */
     async componentWillMount() {
         const { status } = await Permissions.askAsync(Permissions.CAMERA)
         this.setState({ hasCameraPermission: status === 'granted' })
     }
 
+    /**
+     * Will handle the QR Code payload after a scan occurs 
+     */
     handleQRCodeResult = (result) => {
         if (this.state.alertShowing === false) {
             Alert.alert('Scan Success!', 'View your code on the home screen', [{text: 'Dismiss'}], { onDismiss: this.alertWasDismissed() })
@@ -31,7 +37,11 @@ export default class QRScanner extends React.Component {
         }
     }
 
+    /**
+     * Set the state to indicate that we're ready for another scan.
+     */
     alertWasDismissed = () => {
+        // Note: I cannot get this to fire `after` the alert is dismissed... it always fires when the alert shows
         console.log('DISMISSED')
         this.setState({ alertShowing: false })
     }

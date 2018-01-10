@@ -39,22 +39,11 @@ export default class CodeListView extends React.Component {
     }
 
     /**
-     * Will refresh the flatlist data when the Component mounts.
+     * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
         return this.refreshData()
     } 
-
-    /**
-     * Will add a new Code Model to the local store.
-     */
-    async addCode() {
-        try {
-            await CodeModel.addCode()
-        } catch (error) {
-            console.log('Set Item Error', JSON.stringify(error.message))
-        }
-    }
 
     /**
      * Will retrieve all the Codes from the local store and refresh the table.
@@ -73,13 +62,9 @@ export default class CodeListView extends React.Component {
                     title={ this.titleConfig }
                     rightButton={ this.rightBarButtonConfig }
                 />
-                <Button 
-                 onPress={ this.addCode }
-                 title='Add Dummy Code'
-                />
                 <FlatList
                     data={ this.state.data }
-                    renderItem={({item}) => <CodeListViewCell title={item.key} />}
+                    renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
                     keyExtractor={(item, index) => index}
                     refreshing= { this.state.refreshing }
                     onRefresh={ this.refreshData }

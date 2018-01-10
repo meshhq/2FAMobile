@@ -5,9 +5,7 @@ import {
   Text, 
   View 
 } from 'react-native'
-import CodeListView from './CodeListView'
-
-import QRScanner from './QRScanner'
+import CodeListView from './Views/CodeListView'
 
 export default class App extends React.Component {
 

@@ -21,10 +21,12 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "buffer": "^5.0.8",
     "expo": "^23.0.4",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-countdown-circle": "^2.0.0",
-    "react-native-navbar": "^2.1.0"
+    "react-native-navbar": "^2.1.0",
+    "react-native-uuid": "^1.4.9"
   }
 }

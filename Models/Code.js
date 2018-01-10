@@ -16,9 +16,9 @@ export default class CodeModel {
             } else {
                 resultArray = JSON.parse(result)
             }
-            
+
             resultArray.push(codeData)
-            
+
             try {
                 const dataString = JSON.stringify(resultArray)
                 return AsyncStorage.setItem(codeKey, dataString)
@@ -40,9 +40,9 @@ export default class CodeModel {
     /**
      * Will remove a value for a given key.
      * Note: This is pretty ugly but it'll be removed later on.
-     * @param {string} key 
+     * @param {string} data 
      */
-    static async removeCodeForKey(key) {
+    static async removeCodeForKey(data) {
         await CodeModel.getAllCodes().then((result) => {
             if (!result) {
                 return
@@ -51,7 +51,7 @@ export default class CodeModel {
             let foundIndex
             for (let index = 0; index < resultArray.length; index++) {
                 const element = resultArray[index];
-                if (element.key === key) {
+                if (element.data === data) {
                     foundIndex = index
                     break
                 }

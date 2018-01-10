@@ -1,20 +1,32 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { 
+  StyleSheet, 
+  NavigatorIOS, 
+  Text, 
+  View 
+} from 'react-native'
 import CodeListView from './CodeListView'
 
+import QRScanner from './QRScanner'
+
 export default class App extends React.Component {
+
   render() {
     return (
-      <CodeListView style={ styles.container }/>
+      <NavigatorIOS
+        style={styles.container}
+        initialRoute={{
+          title: 'Code List View',
+          component: CodeListView,
+          navigationBarHidden: true
+        }}/>
     )
   }
+  
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1
   },
 })

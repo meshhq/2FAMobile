@@ -1,5 +1,8 @@
 {
   "expo": {
     "sdkVersion": "23.0.0"
+  },
+  "infoPlist": {
+    "NSCameraUsageDescription": "This app uses the camera to scan QR codes."
   }
 }

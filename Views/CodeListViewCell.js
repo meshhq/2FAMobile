@@ -7,6 +7,7 @@ import {
     View,
     Text
 } from 'react-native'
+import CodeDetailView from './CodeDetailView'
 
 export default class CodeListViewCell extends React.PureComponent {
 
@@ -14,7 +15,7 @@ export default class CodeListViewCell extends React.PureComponent {
         return <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
             <View>
                 <Text style={ styles.titleLabel }>{this.props.code.data}</Text>
-                <Text style={ styles.subtitleLabel }>{this.props.code.date}</Text>
+                <Text style={ styles.subtitleLabel }>Date: {this.props.code.date}</Text>
             </View>
             <View>
                 <Image
@@ -26,7 +27,10 @@ export default class CodeListViewCell extends React.PureComponent {
     }
 
     cellPressed = () => {
-        alert('Push Cell Detail VC')
+        this.props.navigator.push({
+            component: CodeDetailView,
+            passProps: { code: this.props.code }
+        })
     }
 
 }

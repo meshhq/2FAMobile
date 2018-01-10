@@ -6,13 +6,16 @@ import {
     View, 
     Text, 
     AsyncStorage,
-    Button
+    Button,
+    Alert,
+    ActivityIndicator
 } from 'react-native'
 
 import NavigationBar from 'react-native-navbar'
 import CodeListViewCell from './CodeListViewCell'
 import QRScanner from './QRScanner'
-import CodeModel from './Models/Code'
+import CodeModel from '../Models/Code'
+import DeviceModel from '../Models/Device'
 
 export default class CodeListView extends React.Component {
 
@@ -21,14 +24,17 @@ export default class CodeListView extends React.Component {
      * FlatList. 'data' will be used to populate the FlatList cells.
      */
     state = {
+        isLoading: true,
         refreshing: false, 
         data: []
     }
 
+    // Configuration for the Nav bar title
     titleConfig = {
         title: 'My Codes'
     }
     
+    // Configuration for the rightBarButtonItem
     rightBarButtonConfig = {
         title: 'Camera',
         handler: () => {
@@ -42,8 +48,22 @@ export default class CodeListView extends React.Component {
      * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
-        return this.refreshData()
-    } 
+        await DeviceModel.getDeviceInfo()
+            .then((device) => {
+                if (device) {
+                    // If the device has been registered we'll call for a refresh.
+                    return this.refreshData()
+                } else {
+                    // Otherwise we'll create a new UUID for this device.
+                    return this.saveDeviceInfo()
+                        .then(() => {
+                            this.setState({ isLoading: false })
+                        })
+                }
+            }).catch((error) => {
+                Alert.alert('Error', error)
+            })
+    }
 
     /**
      * Will retrieve all the Codes from the local store and refresh the table.
@@ -51,27 +71,44 @@ export default class CodeListView extends React.Component {
     refreshData = async () => {
         await CodeModel.getAllCodes().then((result) => {
             const restoredArray = JSON.parse(result)
-            this.setState({ data: restoredArray })
+            this.setState({ 
+                isLoading: false,
+                data: restoredArray 
+            })
         })
     }
 
     render() {
-        return (
-            <View style={ styles.container }>
-                <NavigationBar 
-                    title={ this.titleConfig }
-                    rightButton={ this.rightBarButtonConfig }
-                />
-                <FlatList
-                    data={ this.state.data }
-                    renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
-                    keyExtractor={(item, index) => index}
-                    refreshing= { this.state.refreshing }
-                    onRefresh={ this.refreshData }
-                    ItemSeparatorComponent={this.renderSeparator}
-                />
-            </View>
-        )
+        if (this.state.isLoading === true) {
+            return (
+                <View style={ styles.container }>
+                    <NavigationBar 
+                        title={ this.titleConfig }
+                        rightButton={ this.rightBarButtonConfig }
+                    />
+                    <View style={ styles.spinnerContainer }>
+                        <ActivityIndicator size='large' color='#63acff' />
+                    </View>
+                </View>
+            )
+        } else {
+            return (
+                <View style={ styles.container }>
+                    <NavigationBar 
+                        title={ this.titleConfig }
+                        rightButton={ this.rightBarButtonConfig }
+                    />
+                    <FlatList
+                        data={ this.state.data }
+                        renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
+                        keyExtractor={(item, index) => index}
+                        refreshing= { this.state.refreshing }
+                        onRefresh={ this.refreshData }
+                        ItemSeparatorComponent={this.renderSeparator}
+                    />
+                </View>
+            )
+        }
     }
 
     /**
@@ -88,6 +125,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 30
+    },
+    spinnerContainer: {
+        flex: 1,
+        justifyContent: 'center'
     },
     item: {
         padding: 10,

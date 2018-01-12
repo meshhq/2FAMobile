@@ -7,7 +7,8 @@ import {
     Alert
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
-import CodeModel from './Models/Code'
+import CodeModel from '../Models/Code'
+import Utilities from '../Utilities'
 
 export default class QRScanner extends React.Component {
 
@@ -44,33 +45,13 @@ export default class QRScanner extends React.Component {
      * Will format the QR scan data and add the current date.
      */
     createCodeData = (result) => {
-        const date = this.getCurrentFormattedDate()
+        const date = Utilities.getCurrentFormattedDate()
         return { 
             date: date,
             data: result.data,
             target: result.target,
             type: result.type
         }
-    }
-
-    /**
-     * Will format the scan date to 'XX/XX/XXXX' and return it as a string.
-     */
-    getCurrentFormattedDate = () => {
-        const today = new Date()
-        let dd = today.getDate()
-        let mm = today.getMonth() + 1 // January is 0
-        const yyyy = today.getFullYear()
-
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-
-        if (mm < 10) {
-            mm = '0' + mm
-        } 
-
-        return mm + '/' + dd + '/' + yyyy
     }
 
     /**

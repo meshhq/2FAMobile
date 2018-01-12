@@ -9,6 +9,10 @@ import CountdownCircle from 'react-native-countdown-circle'
 
 export default class CodeDetailView extends React.Component {
 
+    state = {
+        numberOfRefresh: 0
+    }
+
     render() {
         return (
             <View style={ styles.container }>
@@ -35,7 +39,7 @@ export default class CodeDetailView extends React.Component {
                             color="#63acff"
                             bgColor="#fff"
                             textStyle={{ fontSize: 20 }}
-                            onTimeElapsed={() => console.log('Elapsed!')}
+                            onTimeElapsed={ this.timerElapsed }
                         />
                     </View>
                     <View style={ styles.secondsRowContainer } >
@@ -43,8 +47,21 @@ export default class CodeDetailView extends React.Component {
                     </View>
                 </View>
                 <View style={ styles.bottomBufferContainer } />
+                <View style={ styles.bottomTextContainer } >
+                    <Text style={ styles.bottomLabel }>CODE ID: 12345</Text>
+                </View>
             </View>
         )
+    }
+
+    /**
+     * This function will fire once the 30 second timer is up. It will
+     * fetch a new code from the server and restart the timer.
+     */
+    timerElapsed = () => {
+        // Need to fetch and store new Code information.
+        const refresh = this.state.numberOfRefresh + 1
+        this.setState({ numberOfRefresh: refresh })
     }
 
 }
@@ -63,7 +80,7 @@ const styles = StyleSheet.create({
     codeTitleLabel: {
         flex: 1,
         color: '#000000',
-        fontSize: 16
+        fontSize: 24
     },
     codeLabel: {
         flex: 1,
@@ -105,6 +122,17 @@ const styles = StyleSheet.create({
         flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    bottomTextContainer: {
+        flex: 0.25,
+        width: Dimensions.get('window').width * 1.0,
+        alignContent: 'flex-start',
+    },
+    bottomLabel: {
+        flex: 1,
+        color: '#bababa',
+        fontSize: 16,
+        paddingLeft: 8
     },
     timerContainer: {
         flexDirection: 'row',

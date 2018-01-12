@@ -108,13 +108,13 @@ const styles = StyleSheet.create({
     },
     horizontalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(52, 52, 52, 0.9)',
+        backgroundColor: 'rgba(52, 52, 52, 0.75)',
         width: Dimensions.get('window').width * 1.0,
         height: Dimensions.get('window').height * 0.25,
     },
     verticalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(52, 52, 52, 0.9)',
+        backgroundColor: 'rgba(52, 52, 52, 0.75)',
         width: Dimensions.get('window').width * 0.1,
         height: Dimensions.get('window').height * 0.5,
     },

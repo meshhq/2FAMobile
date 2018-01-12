@@ -77,7 +77,13 @@ export default class QRScanner extends React.Component {
             return (
                 <View style={ styles.container }>
                     <BarCodeScanner style={ styles.scanner } onBarCodeRead={ this.handleQRCodeResult }>
-                        <View style={ styles.frame } />
+                        <View style={ styles.horizontalOverlay } />
+                        <View style={ styles.frameContainer }>
+                            <View style={ styles.verticalOverlay } />
+                            <View style={ styles.frame } />
+                            <View style={ styles.verticalOverlay } />
+                        </View>
+                        <View style={ styles.horizontalOverlay } />
                     </BarCodeScanner>
                 </View>
             )
@@ -93,6 +99,24 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    frameContainer: {
+        flex: 2,
+        flexDirection: 'row',
+        width: Dimensions.get('window').width * 1.0,
+        height: Dimensions.get('window').height * 0.5,
+    },
+    horizontalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(52, 52, 52, 0.75)',
+        width: Dimensions.get('window').width * 1.0,
+        height: Dimensions.get('window').height * 0.25,
+    },
+    verticalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(52, 52, 52, 0.75)',
+        width: Dimensions.get('window').width * 0.1,
+        height: Dimensions.get('window').height * 0.5,
     },
     frame: {
         backgroundColor: 'rgba(52, 52, 52, 0.0)',

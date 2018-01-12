@@ -100,7 +100,6 @@ export default class CodeListView extends React.Component {
                     />
                     <FlatList
                         data={ this.state.data }
-                        extraData={ this.state.activeCell }
                         renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
                         keyExtractor={(item, index) => index}
                         refreshing= { this.state.refreshing }

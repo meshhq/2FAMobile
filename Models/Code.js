@@ -27,6 +27,14 @@ export default class CodeModel {
     }
 
     /**
+     * Will update an existing code with new data.
+     * @param {object} codeData 
+     */
+    static async updateExistingCode(codeData) {
+        return AsyncStorage.setItem(codeData.id, codeData)
+    }
+
+    /**
      * Get all the codes currently stored
      */
     static async getAllCodes() {

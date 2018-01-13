@@ -50,16 +50,8 @@ export default class CodeListView extends React.Component {
     async componentWillMount() {
         await DeviceModel.getDeviceInfo()
             .then((device) => {
-                if (device) {
-                    // If the device has been registered we'll call for a refresh.
-                    return this.refreshData()
-                } else {
-                    // Otherwise we'll create a new UUID for this device.
-                    return DeviceModel.saveDeviceInfo()
-                    .then(() => {
-                        this.setState({ isLoading: false })
-                    })
-                }
+                // getDeviceInfo() will find the device info, or create it.
+                return this.refreshData()
             }).catch((error) => {
                 console.log('Error:', error)
             })
@@ -100,7 +92,11 @@ export default class CodeListView extends React.Component {
                     />
                     <FlatList
                         data={ this.state.data }
-                        renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
+                        renderItem={({item}) => <CodeListViewCell 
+                                                    code={item} 
+                                                    navigator={this.props.navigator} 
+                                                    deleteHandler={this.deleteHandler}
+                                                />}
                         keyExtractor={(item, index) => index}
                         refreshing= { this.state.refreshing }
                         onRefresh={ this.refreshData }
@@ -119,6 +115,14 @@ export default class CodeListView extends React.Component {
             <View style={ styles.separator }/>
         )
     }
+
+    /**
+     * Will handle the table reload when a 'swipe to delete' is executed.
+     */
+    deleteHandler = () => {
+        await this.refreshData()
+    }
+
 }
 
 const styles = StyleSheet.create({

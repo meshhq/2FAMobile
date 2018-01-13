@@ -6,6 +6,8 @@ import {
     Text 
 } from 'react-native'
 import CountdownCircle from 'react-native-countdown-circle'
+import NetworkController from '../NetworkController'
+import CodeModel from '../Models/Code';
 
 export default class CodeDetailView extends React.Component {
 
@@ -60,8 +62,14 @@ export default class CodeDetailView extends React.Component {
      */
     timerElapsed = () => {
         // Need to fetch and store new Code information.
-        const refresh = this.state.numberOfRefresh + 1
-        this.setState({ numberOfRefresh: refresh })
+        await NetworkController.updateKey(this.props.code.data)
+            .then((updatedCode) => {
+                return CodeModel.updateExistingCode(updatedCode)
+            })
+            .then(() => {
+                const refresh = this.state.numberOfRefresh + 1
+                this.setState({ numberOfRefresh: refresh })
+            })
     }
 
 }

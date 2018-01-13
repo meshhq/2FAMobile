@@ -7,6 +7,8 @@ import {
     Alert
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
+import NetworkController from '../NetworkController'
+import DeviceModel from '../Models/Device'
 import CodeModel from '../Models/Code'
 import Utilities from '../Utilities'
 
@@ -33,12 +35,34 @@ export default class QRScanner extends React.Component {
      */
     handleQRCodeResult = (result) => {
         if (this.state.alertShowing === false) {
-            const codeData = this.createCodeData(result)
-            CodeModel.addCode(codeData).then(() => {
-                Alert.alert('Scan Success!', 'View your code on the home screen', [{text: 'Dismiss'}], { onDismiss: this.alertWasDismissed() })
-                this.setState({ alertShowing: true })
-            })
+            DeviceModel.getDeviceInfo()
+                .then((deviceInfo) => {
+                    return NetworkController.getKeys()
+                })
+                .then((response) => {
+                    return this.handleKeysResponse(response)
+                })
+                .then(() => {
+                    this.showAlert('Scan Success!', 'View your code on the home screen')
+                })
         }
+    }
+
+    /**
+     * Will handle the Response sent back from the server
+     * and save it to the local store.
+     */
+    handleKeysResponse = (response) => {
+        const codeData = this.createCodeData(result)
+        return CodeModel.addCode(codeData)
+    }
+
+    /**
+     * Will show an alert message over the camera view.
+     */
+    showAlert = (title, message) => {
+        Alert.alert(title, message, [{text: 'Dismiss'}], { onDismiss: this.alertWasDismissed() })
+        this.setState({ alertShowing: true })
     }
 
     /**

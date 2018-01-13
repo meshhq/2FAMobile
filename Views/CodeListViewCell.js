@@ -7,8 +7,10 @@ import {
     View,
     Text
 } from 'react-native'
+import NetworkController from '../NetworkController'
 import CodeDetailView from './CodeDetailView'
 import Swipeout from 'react-native-swipeout'
+import CodeModel from '../Models/Code';
 
 export default class CodeListViewCell extends React.PureComponent {
 
@@ -61,7 +63,15 @@ export default class CodeListViewCell extends React.PureComponent {
          * Note: Local store deletion will change when we have Code Ids
          * from the server
          */
-        console.log('Delete Row')
+
+        return NetworkController.deleteKey(this.props.code.data)
+            .then((response) => {
+                return CodeModel.deleteKey(response.id)
+            })
+            .then(() => {
+                // This is passed through from the CodeListView
+                this.props.deleteHandler()
+            })
     }
 
 }

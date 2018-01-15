@@ -7,9 +7,9 @@ import {
 } from 'react-native'
 import CountdownCircle from 'react-native-countdown-circle'
 import NetworkController from '../NetworkController'
-import CodeModel from '../Models/Code';
+import KeyModel from '../Models/Key';
 
-export default class CodeDetailView extends React.Component {
+export default class KeyDetailView extends React.Component {
 
     state = {
         numberOfRefresh: 0
@@ -20,14 +20,14 @@ export default class CodeDetailView extends React.Component {
             <View style={ styles.container }>
                 <View style={ styles.bufferContainer }/>
                 <View style={ styles.providerContainer }>
-                    <Text style={ styles.providerLabel }>Provider: { this.props.code.target }</Text>
+                    <Text style={ styles.providerLabel }>Provider: { this.props.key.target }</Text>
                 </View>
                 <View style={ styles.rowContainer }>
-                    <Text style={ styles.codeTitleLabel }>Code:</Text>
-                    <Text style={ styles.codeLabel }>{ this.props.code.data }</Text>
+                    <Text style={ styles.keyTitleLabel }>Key:</Text>
+                    <Text style={ styles.keyLabel }>{ this.props.key.data }</Text>
                 </View>
                 <View style={ styles.rowContainer }>
-                    <Text style={ styles.dateLabel }>Date: { this.props.code.date }</Text>
+                    <Text style={ styles.dateLabel }>Date: { this.props.key.date }</Text>
                 </View>
                 <View style={ styles.timerContainer }>
                     <View style={ styles.expireRowContainer } >
@@ -50,7 +50,7 @@ export default class CodeDetailView extends React.Component {
                 </View>
                 <View style={ styles.bottomBufferContainer } />
                 <View style={ styles.bottomTextContainer } >
-                    <Text style={ styles.bottomLabel }>CODE ID: 12345</Text>
+                    <Text style={ styles.bottomLabel }>KEY ID: 12345</Text>
                 </View>
             </View>
         )
@@ -58,13 +58,13 @@ export default class CodeDetailView extends React.Component {
 
     /**
      * This function will fire once the 30 second timer is up. It will
-     * fetch a new code from the server and restart the timer.
+     * fetch a new key from the server and restart the timer.
      */
     timerElapsed = () => {
-        // Need to fetch and store new Code information.
-        await NetworkController.updateKey(this.props.code.data)
-            .then((updatedCode) => {
-                return CodeModel.updateExistingCode(updatedCode)
+        // Need to fetch and store new Key information.
+        await NetworkController.updateKey(this.props.key.data)
+            .then((updatedKey) => {
+                return KeyModel.updateExistingKey(updatedKey)
             })
             .then(() => {
                 const refresh = this.state.numberOfRefresh + 1
@@ -85,12 +85,12 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: 36
     },
-    codeTitleLabel: {
+    keyTitleLabel: {
         flex: 1,
         color: '#000000',
         fontSize: 24
     },
-    codeLabel: {
+    keyLabel: {
         flex: 1,
         color: '#63acff',
         fontSize: 28

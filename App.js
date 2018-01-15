@@ -5,7 +5,7 @@ import {
   Text, 
   View 
 } from 'react-native'
-import CodeListView from './Views/CodeListView'
+import KeyListView from './Views/KeyListView'
 
 export default class App extends React.Component {
 
@@ -14,8 +14,8 @@ export default class App extends React.Component {
       <NavigatorIOS
         style={styles.container}
         initialRoute={{
-          title: 'Code List View',
-          component: CodeListView,
+          title: 'Key List View',
+          component: KeyListView,
           navigationBarHidden: true
         }}/>
     )

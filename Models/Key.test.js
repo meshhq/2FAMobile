@@ -1,4 +1,4 @@
-import CodeModel from './Code'
+import KeyModel from './Key'
 
 import MockStorage from '../MockStorage'
 
@@ -7,37 +7,37 @@ const AsyncStorage = new MockStorage(storageCache)
 
 jest.setMock('AsyncStorage', AsyncStorage)
 
-describe('CodeModel', () => {
+describe('KeyModel', () => {
 
-    it('getAllCodes()', async () => {
-        await CodeModel.getAllCodes()
+    it('getAllKeys()', async () => {
+        await KeyModel.getAllKeys()
             .then((result) => {
                 expect(result).toBe(null)
             })
     })
 
-    it('addCode()', async () => {
-        const dummyCode = createDummyCode()
-        await CodeModel.addCode(dummyCode)
+    it('addKey()', async () => {
+        const dummyKey = createDummyKey()
+        await KeyModel.addKey(dummyKey)
             .then(() => {
-                return CodeModel.getAllCodes()
+                return KeyModel.getAllKeys()
             })
             .then((result) => {
                 expect(result).toEqual(expect.anything())
             })
     })
     
-    it('getAllCodes()', async () => {
-        await CodeModel.getAllCodes()
+    it('getAllKeys()', async () => {
+        await KeyModel.getAllKeys()
             .then((result) => {
                 expect(result).toEqual(expect.anything())
             })
     })
 
-    it('removeAllCodes()', async () => {
-        await CodeModel.removeAllCodes()
+    it('wipeLocalStore()', async () => {
+        await KeyModel.wipeLocalStore()
             .then(() => {
-                return CodeModel.getAllCodes()
+                return KeyModel.getAllKeys()
             })
             .then((result) => {
                 expect(result).toBe(null)
@@ -46,8 +46,9 @@ describe('CodeModel', () => {
 
 })
 
-const createDummyCode = () => {
+const createDummyKey = () => {
     return { 
+        id: '1',
         date: '00/00/0000',
         data: 'localhost:3000',
         target: 'testTarget',

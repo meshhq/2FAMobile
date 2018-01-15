@@ -8,11 +8,11 @@ import {
     Text
 } from 'react-native'
 import NetworkController from '../NetworkController'
-import CodeDetailView from './CodeDetailView'
+import KeyDetailView from './KeyDetailView'
 import Swipeout from 'react-native-swipeout'
-import CodeModel from '../Models/Code';
+import KeyModel from '../Models/Key';
 
-export default class CodeListViewCell extends React.PureComponent {
+export default class KeyListViewCell extends React.PureComponent {
 
     render() {
         const swipeOutButtons = [
@@ -27,9 +27,9 @@ export default class CodeListViewCell extends React.PureComponent {
             <Swipeout right={swipeOutButtons}>
                 <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
                     <View>
-                        <Text style={ styles.subtitleLabel }>Provider: {this.props.code.target}</Text>
-                        <Text style={ styles.titleLabel }>{this.props.code.data}</Text>
-                        <Text style={ styles.subtitleLabel }>Date: {this.props.code.date}</Text>
+                        <Text style={ styles.subtitleLabel }>Provider: {this.props.key.target}</Text>
+                        <Text style={ styles.titleLabel }>{this.props.key.data}</Text>
+                        <Text style={ styles.subtitleLabel }>Date: {this.props.key.date}</Text>
                     </View>
                     <View>
                         <Image
@@ -43,13 +43,13 @@ export default class CodeListViewCell extends React.PureComponent {
     }
 
     /**
-     * Will push the CodeDetailView on screen with the Code data
+     * Will push the KeyDetailView on screen with the Key data
      * from the cell pressed.
      */
     cellPressed = () => {
         this.props.navigator.push({
-            component: CodeDetailView,
-            passProps: { code: this.props.code }
+            component: KeyDetailView,
+            passProps: { key: this.props.key }
         })
     }
 
@@ -57,20 +57,13 @@ export default class CodeListViewCell extends React.PureComponent {
      * Action taken when the swipe to delete button is pressed.
      */
     deleteRow = () => {
-        /**
-         * Need to hook up this delete to server and local store.
-         * 
-         * Note: Local store deletion will change when we have Code Ids
-         * from the server
-         */
-
-        return NetworkController.deleteKey(this.props.code.data)
+        return NetworkController.deleteKey(this.props.key.data)
             .then((response) => {
-                return CodeModel.deleteKey(response.id)
+                return KeyModel.deleteKey(response.id)
             })
             .then(() => {
-                // This is passed through from the CodeListView
-                this.props.deleteHandler()
+                // This is passed through from the KeyListView
+                this.props.deleteHandler(this.props.key.id)
             })
     }
 

@@ -12,12 +12,13 @@ import {
 } from 'react-native'
 
 import NavigationBar from 'react-native-navbar'
-import CodeListViewCell from './CodeListViewCell'
+import KeyListViewCell from './KeyListViewCell'
 import QRScanner from './QRScanner'
-import CodeModel from '../Models/Code'
+import KeyModel from '../Models/Key'
 import DeviceModel from '../Models/Device'
+import NetworkController from '../NetworkController'
 
-export default class CodeListView extends React.Component {
+export default class KeyListView extends React.Component {
 
     /**
      * 'refreshing' is required as a prop for the built in "Pull to Refresh" on the
@@ -31,7 +32,7 @@ export default class CodeListView extends React.Component {
 
     // Configuration for the Nav bar title
     titleConfig = {
-        title: 'My Codes'
+        title: 'My Keys'
     }
     
     // Configuration for the rightBarButtonItem
@@ -58,10 +59,10 @@ export default class CodeListView extends React.Component {
     } 
 
     /**
-     * Will retrieve all the Codes from the local store and refresh the table.
+     * Will retrieve all the Keys from the local store and refresh the table.
      */
     refreshData = async () => {
-        await CodeModel.getAllCodes().then((result) => {
+        await KeyModel.getAllKeys().then((result) => {
             const restoredArray = JSON.parse(result)
             return this.setState({ 
                 isLoading: false,
@@ -92,8 +93,8 @@ export default class CodeListView extends React.Component {
                     />
                     <FlatList
                         data={ this.state.data }
-                        renderItem={({item}) => <CodeListViewCell 
-                                                    code={item} 
+                        renderItem={({item}) => <KeyListViewCell 
+                                                    key={item} 
                                                     navigator={this.props.navigator} 
                                                     deleteHandler={this.deleteHandler}
                                                 />}
@@ -117,10 +118,17 @@ export default class CodeListView extends React.Component {
     }
 
     /**
-     * Will handle the table reload when a 'swipe to delete' is executed.
+     * Will handle the local and remote delete calls then execute 
+     * a table reload when a 'swipe to delete' is executed.
      */
-    deleteHandler = () => {
-        await this.refreshData()
+    deleteHandler = (keyId) => {
+        return NetworkController.deleteKey(keyId)
+            .then(() => {
+                return KeyModel.deleteKey(keyId)
+            })
+            .then(() => {
+                await this.refreshData()
+            })
     }
 
 }

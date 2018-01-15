@@ -1,9 +1,9 @@
 import React from 'react'
-import CodeDetailView from './CodeDetailViewCell'
+import KeyListView from './KeyListView'
 
 import renderer from 'react-test-renderer'
 
 it('renders without crashing', () => {
-  const rendered = renderer.create(<CodeDetailViewCell />).toJSON()
+  const rendered = renderer.create(<KeyListView />).toJSON()
   expect(rendered).toBeTruthy()
 })

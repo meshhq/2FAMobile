@@ -62,7 +62,7 @@ export default class KeyListView extends React.Component {
      * Will retrieve all the Keys from the local store and refresh the table.
      */
     refreshData = async () => {
-        await KeyModel.getAllKeys().then((result) => {
+        await KeyModel.getAllKeyData().then((result) => {
             const restoredArray = JSON.parse(result)
             return this.setState({ 
                 isLoading: false,
@@ -127,7 +127,7 @@ export default class KeyListView extends React.Component {
                 return KeyModel.deleteKey(keyId)
             })
             .then(() => {
-                await this.refreshData()
+                return this.refreshData()
             })
     }
 

@@ -27,9 +27,9 @@ export default class KeyListViewCell extends React.PureComponent {
             <Swipeout right={swipeOutButtons}>
                 <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
                     <View>
-                        <Text style={ styles.subtitleLabel }>Provider: {this.props.key.target}</Text>
-                        <Text style={ styles.titleLabel }>{this.props.key.data}</Text>
-                        <Text style={ styles.subtitleLabel }>Date: {this.props.key.date}</Text>
+                        <Text style={ styles.subtitleLabel }>Provider: {this.props.keyData.target}</Text>
+                        <Text style={ styles.titleLabel }>{this.props.keyData.data}</Text>
+                        <Text style={ styles.subtitleLabel }>Date: {this.props.keyData.date}</Text>
                     </View>
                     <View>
                         <Image

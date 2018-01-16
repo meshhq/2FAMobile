@@ -122,13 +122,7 @@ export default class KeyListView extends React.Component {
      * a table reload when a 'swipe to delete' is executed.
      */
     deleteHandler = (keyId) => {
-        return NetworkController.deleteKey(keyId)
-            .then(() => {
-                return KeyModel.deleteKey(keyId)
-            })
-            .then(() => {
-                return this.refreshData()
-            })
+        await this.refreshData()
     }
 
 }

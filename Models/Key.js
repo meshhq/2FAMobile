@@ -91,11 +91,40 @@ export default class KeyModel {
 
     /**
      * Will remove the key data for the given keyId from the
-     * AsyncStorage.
+     * AsyncStorage and will remove the Id from the Id array.
      * @param {string} keyId 
      */
     static async deleteKey(keyId) {
-        return AsyncStorage.removeItem(keyId)
+        return KeyModel.deleteKeyId(keyId)
+            .then(() => {
+                return AsyncStorage.removeItem(keyId)
+            })
+    }
+
+    /**
+     * Remove a single keyID from the ID array.
+     * @param {string} keyId 
+     */
+    static async deleteKeyId(keyId) {
+        return KeyModel.getAllKeyIds()
+            .then((Ids) => {
+                let result = JSON.parse(Ids)
+                if (result == keyId) {
+                    return AsyncStorage.removeItem(keyIds)
+                }
+                let foundIndex
+                for (let index = 0; result < Ids.length; index++) {
+                    const element = result[index]
+                    if (element.data === data) {
+                        foundIndex = index
+                        break
+                    }
+                }
+                result.splice(foundIndex, 1)
+
+                const idString = JSON.stringify(result)
+                return AsyncStorage.setItem(keyIds, idString)
+            })
     }
 
     /**

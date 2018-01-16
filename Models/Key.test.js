@@ -75,6 +75,20 @@ describe('KeyModel', () => {
             })
     })
 
+    it('deleteKey()', async () => {
+        await KeyModel.deleteKey(keyId)
+            .then(() => {
+                return KeyModel.getAllKeyIds()
+            })
+            .then((result) => {
+                expect(result).toBe(null)
+                return KeyModel.getAllKeyData()
+            })
+            .then((result) => {
+                expect(result).toBe(null)
+            })
+    })
+
     it('wipeLocalStore()', async () => {
         await KeyModel.wipeLocalStore()
             .then(() => {

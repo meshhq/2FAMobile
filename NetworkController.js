@@ -24,8 +24,9 @@ export default class NetworkController {
      * A `POST` method to create a new key with the given body 
      * for the current device.
      * @param {object} device
+     * @param {object} keyData
      */
-    static async createKey(device) {
+    static async createKey(device, keyData) {
         return fetch(baseURL + '/keys', {
             method: 'POST',
             headers: {
@@ -34,8 +35,8 @@ export default class NetworkController {
             },
             body: JSON.stringify({
                 deviceId: device.uuid,
-                key: '',
-                provider: ''
+                key: keyData.secret,
+                provider: keyData.issuer
             })
         })
         .then((response) => {

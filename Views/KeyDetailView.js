@@ -22,14 +22,14 @@ export default class KeyDetailView extends React.Component {
      */
     timerElapsed = () => {
         // Need to fetch and store new Key information.
-        return NetworkController.updateKey(this.props.key.data)
-            .then((updatedKey) => {
-                return KeyModel.addOrUpdateKey(updatedKey)
-            })
-            .then(() => {
-                const refresh = this.state.numberOfRefresh + 1
-                this.setState({ numberOfRefresh: refresh })
-            })
+        // return NetworkController.updateKey(this.props.key.data)
+        //     .then((updatedKey) => {
+        //         return KeyModel.addOrUpdateKey(updatedKey)
+        //     })
+        //     .then(() => {
+        //         const refresh = this.state.numberOfRefresh + 1
+        //         this.setState({ numberOfRefresh: refresh })
+        //     })
     }
 
     render() {
@@ -37,11 +37,11 @@ export default class KeyDetailView extends React.Component {
             <View style={ styles.container }>
                 <View style={ styles.bufferContainer }/>
                 <View style={ styles.providerContainer }>
-                    <Text style={ styles.providerLabel }>Provider: { this.props.keyData.target }</Text>
+                    <Text style={ styles.providerLabel }>Provider: { this.props.keyData.issuer }</Text>
                 </View>
                 <View style={ styles.rowContainer }>
                     <Text style={ styles.keyTitleLabel }>Key:</Text>
-                    <Text style={ styles.keyLabel }>{ this.props.keyData.data }</Text>
+                    <Text style={ styles.keyLabel }>{ this.props.keyData.secret }</Text>
                 </View>
                 <View style={ styles.rowContainer }>
                     <Text style={ styles.dateLabel }>Date: { this.props.keyData.date }</Text>

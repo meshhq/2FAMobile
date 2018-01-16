@@ -27,7 +27,7 @@ export default class KeyModel {
             })
             .then(() => {
                 const dataString = JSON.stringify(keyData)
-                return AsyncStorage.setItem(keyData.id, dataString)
+                return AsyncStorage.setItem(keyData.id.toString(), dataString)
             })
     }
 
@@ -36,7 +36,7 @@ export default class KeyModel {
      * @param {string} keyId
      */
     static async getKeyWithId(keyId) {
-        return AsyncStorage.getItem(keyId)
+        return AsyncStorage.getItem(keyId.toString())
             .then((result) => {
                 return result
             })
@@ -68,13 +68,12 @@ export default class KeyModel {
                     // Back out if we don't have any Ids.
                     return result
                 }
- 
-                resultArray = JSON.parse(result)
-
                 // If only one key exists this will be false and we can't call '.forEach'
                 const isArray = Array.isArray(resultArray)
                 if (!isArray) {
-                    return [resultArray]
+                    return KeyModel.getKeyWithId(resultArray).then((key) => {
+                        return [key]
+                    })
                 }
 
                 let allKeyPromises = []
@@ -131,11 +130,7 @@ export default class KeyModel {
      * Used in DEV mode only to wipe the ENTIRE store clean.
      */
     static async wipeLocalStore() {
-        try {
-            await AsyncStorage.clear()            
-        } catch (error) {
-            console.log('Error Wiping Local Store: ', error)
-        }
+        await AsyncStorage.removeItem(keyIds)
     }
 
 }

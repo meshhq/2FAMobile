@@ -12,7 +12,9 @@ describe('DeviceModel', () => {
     it('getDeviceInfo()', async () => {
         await DeviceModel.getDeviceInfo()
             .then((result) => {
-                expect(result).toEqual(null)
+                expect(result).toEqual(expect.anything())
+            }).then(() => {
+                return DeviceModel.removeDeviceInfo()
             })
     })
 
@@ -30,16 +32,6 @@ describe('DeviceModel', () => {
         await DeviceModel.getDeviceInfo()
             .then((result) => {
                 expect(result).toEqual(expect.anything())
-            })
-    })
-
-    it('removeDeviceInfo()', async () => {
-        await DeviceModel.removeDeviceInfo()
-            .then(() => {
-                return DeviceModel.getDeviceInfo()
-            })
-            .then((result) => {
-                expect(result).toEqual(null)
             })
     })
 

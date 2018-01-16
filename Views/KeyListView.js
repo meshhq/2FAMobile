@@ -49,13 +49,14 @@ export default class KeyListView extends React.Component {
      * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
-        return DeviceModel.getDeviceInfo()
-            .then((device) => {
-                // getDeviceInfo() will find the device info, or create it.
-                return this.refreshData()
-            }).catch((error) => {
-                console.log('Error:', error)
-            })
+        return KeyModel.wipeLocalStore()
+        // return DeviceModel.getDeviceInfo()
+        //     .then((device) => {
+        //         // getDeviceInfo() will find the device info, or create it.
+        //         return this.refreshData()
+        //     }).catch((error) => {
+        //         console.log('Error:', error)
+        //     })
     } 
 
     /**
@@ -63,10 +64,15 @@ export default class KeyListView extends React.Component {
      */
     refreshData = async () => {
         return KeyModel.getAllKeyData().then((result) => {
-            const restoredArray = JSON.parse(result)
+            console.log('Got this data: ', result)
+            if (!result) {
+                return this.setState({ 
+                    isLoading: false
+                })    
+            }
             return this.setState({ 
                 isLoading: false,
-                data: restoredArray 
+                data: result 
             })
         })
     }
@@ -89,40 +95,60 @@ export default class KeyListView extends React.Component {
     }
 
     render() {
-        if (this.state.isLoading === true) {
-            return (
-                <View style={ styles.container }>
-                    <NavigationBar 
-                        title={ this.titleConfig }
-                        rightButton={ this.rightBarButtonConfig }
-                    />
-                    <View style={ styles.spinnerContainer }>
-                        <ActivityIndicator size='large' color='#63acff' />
-                    </View>
-                </View>
-            )
-        } else {
-            return (
-                <View style={ styles.container }>
-                    <NavigationBar 
-                        title={ this.titleConfig }
-                        rightButton={ this.rightBarButtonConfig }
-                    />
-                    <FlatList
-                        data={ this.state.data }
-                        renderItem={({item}) => <KeyListViewCell 
-                                                    key={item} 
-                                                    navigator={this.props.navigator} 
-                                                    deleteHandler={this.deleteHandler}
-                                                />}
-                        keyExtractor={(item, index) => index}
-                        refreshing= { this.state.refreshing }
-                        onRefresh={ this.refreshData }
-                        ItemSeparatorComponent={this.renderSeparator}
-                    />
-                </View>
-            )
-        }
+        return (
+            <View style={ styles.container }>
+                <NavigationBar 
+                    title={ this.titleConfig }
+                    rightButton={ this.rightBarButtonConfig }
+                />
+                <FlatList
+                    data={ this.state.data }
+                    renderItem={({item}) => <KeyListViewCell 
+                                                keyData={JSON.parse(item)} 
+                                                navigator={this.props.navigator} 
+                                                deleteHandler={this.deleteHandler}
+                                            />}
+                    keyExtractor={(item, index) => index}
+                    refreshing= { this.state.refreshing }
+                    onRefresh={ this.refreshData }
+                    ItemSeparatorComponent={this.renderSeparator}
+                />
+            </View>
+        )
+        // if (this.state.isLoading === true) {
+        //     return (
+        //         <View style={ styles.container }>
+        //             <NavigationBar 
+        //                 title={ this.titleConfig }
+        //                 rightButton={ this.rightBarButtonConfig }
+        //             />
+        //             <View style={ styles.spinnerContainer }>
+        //                 <ActivityIndicator size='large' color='#63acff' />
+        //             </View>
+        //         </View>
+        //     )
+        // } else {
+        //     return (
+        //         <View style={ styles.container }>
+        //             <NavigationBar 
+        //                 title={ this.titleConfig }
+        //                 rightButton={ this.rightBarButtonConfig }
+        //             />
+        //             <FlatList
+        //                 data={ this.state.data }
+        //                 renderItem={({item}) => <KeyListViewCell 
+        //                                             key={item} 
+        //                                             navigator={this.props.navigator} 
+        //                                             deleteHandler={this.deleteHandler}
+        //                                         />}
+        //                 keyExtractor={(item, index) => index}
+        //                 refreshing= { this.state.refreshing }
+        //                 onRefresh={ this.refreshData }
+        //                 ItemSeparatorComponent={this.renderSeparator}
+        //             />
+        //         </View>
+        //     )
+        // }
     }
 
 }

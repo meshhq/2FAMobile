@@ -33,6 +33,7 @@ describe('KeyModel', () => {
                 return KeyModel.getKeyWithId(keyId)
             })
             .then((result) => {
+                console.log('heres a get', result)
                 expect(result).toEqual(expect.anything())
             })
     })
@@ -42,7 +43,7 @@ describe('KeyModel', () => {
             .then((result) => {
                 expect(result).toEqual(expect.anything())
                 const keyData = JSON.parse(result)
-                expect(keyData.target).toEqual(testTargetOne)
+                expect(keyData.issuer).toEqual(testIssuerOne)
             })
     })
 
@@ -63,7 +64,7 @@ describe('KeyModel', () => {
     // Update existing key
     it('addOrUpdateKey()', async () => {
         const dummyKey = createDummyKey()
-        dummyKey.target = testTargetTwo
+        dummyKey.issuer = testIssuerTwo
         await KeyModel.addOrUpdateKey(dummyKey)
             .then(() => {
                 return KeyModel.getKeyWithId(keyId)
@@ -71,7 +72,7 @@ describe('KeyModel', () => {
             .then((result) => {
                 expect(result).toEqual(expect.anything())
                 const keyData = JSON.parse(result)
-                expect(keyData.target).toEqual(testTargetTwo)
+                expect(keyData.issuer).toEqual(testIssuerTwo)
             })
     })
 
@@ -89,28 +90,17 @@ describe('KeyModel', () => {
             })
     })
 
-    it('wipeLocalStore()', async () => {
-        await KeyModel.wipeLocalStore()
-            .then(() => {
-                return KeyModel.getKeyWithId(keyId)
-            })
-            .then((result) => {
-                expect(result).toBe(null)
-            })
-    })
-
 })
 
 const keyId = '1'
-const testTargetOne = 'testTarget_1'
-const testTargetTwo = 'testTarget_2'
+const testIssuerOne = 'testIssuer_1'
+const testIssuerTwo = 'testIssuer_2'
 
 const createDummyKey = () => {
     return { 
         id: keyId,
         date: '00/00/0000',
-        data: 'localhost:3000',
-        target: testTargetOne,
-        type: 'testType'
+        issuer: testIssuerOne,
+        secret: '123456'
     }
 }

@@ -3,8 +3,9 @@ import {
     View, 
     StyleSheet, 
     Dimensions, 
-    Text 
+    Text
 } from 'react-native'
+import PropTypes from 'prop-types'
 import CountdownCircle from 'react-native-countdown-circle'
 import NetworkController from '../NetworkController'
 import KeyModel from '../Models/Key';
@@ -13,6 +14,22 @@ export default class KeyDetailView extends React.Component {
 
     state = {
         numberOfRefresh: 0
+    }
+
+    /**
+     * This function will fire once the 30 second timer is up. It will
+     * fetch a new key from the server and restart the timer.
+     */
+    timerElapsed = () => {
+        // Need to fetch and store new Key information.
+        return NetworkController.updateKey(this.props.key.data)
+            .then((updatedKey) => {
+                return KeyModel.addOrUpdateKey(updatedKey)
+            })
+            .then(() => {
+                const refresh = this.state.numberOfRefresh + 1
+                this.setState({ numberOfRefresh: refresh })
+            })
     }
 
     render() {
@@ -56,22 +73,10 @@ export default class KeyDetailView extends React.Component {
         )
     }
 
-    /**
-     * This function will fire once the 30 second timer is up. It will
-     * fetch a new key from the server and restart the timer.
-     */
-    timerElapsed = () => {
-        // Need to fetch and store new Key information.
-        return NetworkController.updateKey(this.props.key.data)
-            .then((updatedKey) => {
-                return KeyModel.addOrUpdateKey(updatedKey)
-            })
-            .then(() => {
-                const refresh = this.state.numberOfRefresh + 1
-                this.setState({ numberOfRefresh: refresh })
-            })
-    }
+}
 
+KeyDetailView.propTypes = {
+    keyData: PropTypes.object
 }
 
 const styles = StyleSheet.create({

@@ -49,7 +49,7 @@ export default class KeyListView extends React.Component {
      * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
-        await DeviceModel.getDeviceInfo()
+        return DeviceModel.getDeviceInfo()
             .then((device) => {
                 // getDeviceInfo() will find the device info, or create it.
                 return this.refreshData()
@@ -62,13 +62,30 @@ export default class KeyListView extends React.Component {
      * Will retrieve all the Keys from the local store and refresh the table.
      */
     refreshData = async () => {
-        await KeyModel.getAllKeyData().then((result) => {
+        return KeyModel.getAllKeyData().then((result) => {
             const restoredArray = JSON.parse(result)
             return this.setState({ 
                 isLoading: false,
                 data: restoredArray 
             })
         })
+    }
+
+    /**
+     * Create the view used as a separator.
+     */
+    renderSeparator() {
+        return (
+            <View style={ styles.separator }/>
+        )
+    }
+
+    /**
+     * Will handle the local and remote delete calls then execute 
+     * a table reload when a 'swipe to delete' is executed.
+     */
+    deleteHandler = (keyId) => {
+        return this.refreshData()
     }
 
     render() {
@@ -106,23 +123,6 @@ export default class KeyListView extends React.Component {
                 </View>
             )
         }
-    }
-
-    /**
-     * Create the view used as a separator.
-     */
-    renderSeparator() {
-        return (
-            <View style={ styles.separator }/>
-        )
-    }
-
-    /**
-     * Will handle the local and remote delete calls then execute 
-     * a table reload when a 'swipe to delete' is executed.
-     */
-    deleteHandler = (keyId) => {
-        await this.refreshData()
     }
 
 }

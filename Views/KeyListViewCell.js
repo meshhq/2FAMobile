@@ -2,17 +2,43 @@ import React from 'react'
 
 import {
     TouchableOpacity,
-    StyleSheet, 
+    StyleSheet,
     Image,
     View,
     Text
 } from 'react-native'
+import PropTypes from 'prop-types'
 import NetworkController from '../NetworkController'
 import KeyDetailView from './KeyDetailView'
 import Swipeout from 'react-native-swipeout'
 import KeyModel from '../Models/Key';
 
 export default class KeyListViewCell extends React.PureComponent {
+
+    /**
+     * Will push the KeyDetailView on screen with the Key data
+     * from the cell pressed.
+     */
+    cellPressed = () => {
+        this.props.navigator.push({
+            component: KeyDetailView,
+            passProps: { key: this.props.key }
+        })
+    }
+
+    /**
+     * Action taken when the swipe to delete button is pressed.
+     */
+    deleteRow = () => {
+        return NetworkController.deleteKey(this.props.key.data)
+            .then((response) => {
+                return KeyModel.deleteKey(response.id)
+            })
+            .then(() => {
+                // This is passed through from the KeyListView
+                this.props.deleteHandler(this.props.key.id)
+            })
+    }
 
     render() {
         const swipeOutButtons = [
@@ -42,31 +68,10 @@ export default class KeyListViewCell extends React.PureComponent {
         )
     }
 
-    /**
-     * Will push the KeyDetailView on screen with the Key data
-     * from the cell pressed.
-     */
-    cellPressed = () => {
-        this.props.navigator.push({
-            component: KeyDetailView,
-            passProps: { key: this.props.key }
-        })
-    }
+}
 
-    /**
-     * Action taken when the swipe to delete button is pressed.
-     */
-    deleteRow = () => {
-        return NetworkController.deleteKey(this.props.key.data)
-            .then((response) => {
-                return KeyModel.deleteKey(response.id)
-            })
-            .then(() => {
-                // This is passed through from the KeyListView
-                this.props.deleteHandler(this.props.key.id)
-            })
-    }
-
+KeyListViewCell.propTypes = {
+    keyData: PropTypes.object
 }
 
 const styles = StyleSheet.create({

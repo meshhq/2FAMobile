@@ -54,7 +54,7 @@ export default class QRScanner extends React.Component {
      * and save it to the local store.
      */
     handleKeysResponse = (response) => {
-        const keyData = this.createKeyData(result)
+        const keyData = this.createKeyData(response)
         return KeyModel.addOrUpdateKey(keyData)
     }
 

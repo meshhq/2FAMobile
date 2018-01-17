@@ -22,7 +22,7 @@ export default class KeyDetailView extends React.Component {
      */
     timerElapsed = () => {
         // Need to fetch and store new Key information.
-        return NetworkController.updateKey(this.props.key.data)
+        return NetworkController.updateKey(this.props.keyData)
             .then((updatedKey) => {
                 return KeyModel.addOrUpdateKey(updatedKey)
             })

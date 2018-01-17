@@ -12,16 +12,14 @@ export default class DeviceModel {
      * if there is no info saved to this device.
      */
     static async getDeviceInfo() {
-        return AsyncStorage.getItem(deviceKey)
-            .then((result) => {
-                if (result) {
-                    return result
-                }
-                return DeviceModel.saveDeviceInfo()
-            })
-            .then(() => {
-                return AsyncStorage.getItem(deviceKey)
-            })
+        const deviceInfo = await AsyncStorage.getItem(deviceKey)
+        if (deviceInfo) {
+            return JSON.parse(deviceInfo)
+        }
+        // No info found, lets save the current info and return it
+        await DeviceModel.saveDeviceInfo()
+        const deviceString = await AsyncStorage.getItem(deviceKey)
+        return JSON.parse(deviceString)
     }
 
     /**

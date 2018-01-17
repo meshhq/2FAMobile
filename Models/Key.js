@@ -36,25 +36,21 @@ export default class KeyModel {
      * @param {string} keyId
      */
     static async getKeyWithId(keyId) {
-        return AsyncStorage.getItem(keyId)
-            .then((result) => {
-                return result
-            })
+        const keyString = await AsyncStorage.getItem(keyId)
+        return JSON.parse(keyString)
     }
 
     /**
      * Get all the Ids for keys that have been created.
      */
     static async getAllKeyIds() {
-        return AsyncStorage.getItem(keyIds)
-            .then((result) => {
-                if (!result) {
-                    // Back out if we don't have any Ids.
-                    return result
-                }
-                const resultArray = JSON.parse(result)
-                return resultArray
-            })
+        const allKeyIds = await AsyncStorage.getItem(keyIds)
+        if (!allKeyIds) {
+          // Back out if we don't have any Ids
+          return null
+        }
+        const resultArray = JSON.parse(allKeyIds)
+        return resultArray
     }
 
     /**
@@ -68,17 +64,15 @@ export default class KeyModel {
                     // Back out if we don't have any Ids.
                     return result
                 }
- 
-                resultArray = JSON.parse(result)
 
                 // If only one key exists this will be false and we can't call '.forEach'
-                const isArray = Array.isArray(resultArray)
+                const isArray = Array.isArray(result)
                 if (!isArray) {
-                    return [resultArray]
+                    return [result]
                 }
 
-                let allKeyPromises = []
-                resultArray.forEach(keyId => {
+                const allKeyPromises = []
+                result.forEach(keyId => {
                     // Fetch key data for each stored Id.
                     const keyPromise = KeyModel.getKeyWithId(keyId)
                     allKeyPromises.push(keyPromise)
@@ -120,7 +114,9 @@ export default class KeyModel {
                         break
                     }
                 }
-                result.splice(foundIndex, 1)
+                if (foundIndex) {
+                    result.splice(foundIndex, 1)
+                }
 
                 const idString = JSON.stringify(result)
                 return AsyncStorage.setItem(keyIds, idString)

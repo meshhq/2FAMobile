@@ -11,53 +11,39 @@ describe('KeyModel', () => {
 
     it('getAllKeyIds()', async () => {
         // Should return null since there are no keys
-        await KeyModel.getAllKeyIds()
-            .then((keys) => {
-                expect(keys).toBe(null)
-            })
+        const keyIds = await KeyModel.getAllKeyIds()
+        expect(keyIds).toBe(null)
     })
 
     it('getKeyWithId()', async () => {
         // Should return null since there are no keys
-        await KeyModel.getKeyWithId(keyId)
-            .then((result) => {
-                expect(result).toBe(null)
-            })
+        const result = await KeyModel.getKeyWithId(keyId)
+        expect(result).toBe(null)
     })
 
     // Create new key
     it('addOrUpdateKey()', async () => {
         const dummyKey = createDummyKey()
         await KeyModel.addOrUpdateKey(dummyKey)
-            .then(() => {
-                return KeyModel.getKeyWithId(keyId)
-            })
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-            })
+        const key = await KeyModel.getKeyWithId(keyId)
+        expect(key).toEqual(expect.anything())
+        expect(key.id).toEqual(keyId)
     })
     
     it('getKeyWithId()', async () => {
-        await KeyModel.getKeyWithId(keyId)
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-                const keyData = JSON.parse(result)
-                expect(keyData.target).toEqual(testTargetOne)
-            })
+        const key = await KeyModel.getKeyWithId(keyId)
+        expect(key).toEqual(expect.anything())
+        expect(key.target).toEqual(testTargetOne)
     })
 
     it('getAllKeyIds()', async () => {
-        await KeyModel.getAllKeyIds()
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-            })
+        const key = await KeyModel.getAllKeyIds()
+        expect(key).toEqual(expect.anything())
     })
 
     it('getAllKeyData()', async () => {
-        await KeyModel.getAllKeyData()
-            .then((keys) => {
-                expect(keys).toEqual(expect.anything())
-            })
+        const keys = await KeyModel.getAllKeyData()
+        expect(keys).toEqual(expect.anything())
     })
 
     // Update existing key
@@ -65,38 +51,23 @@ describe('KeyModel', () => {
         const dummyKey = createDummyKey()
         dummyKey.target = testTargetTwo
         await KeyModel.addOrUpdateKey(dummyKey)
-            .then(() => {
-                return KeyModel.getKeyWithId(keyId)
-            })
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-                const keyData = JSON.parse(result)
-                expect(keyData.target).toEqual(testTargetTwo)
-            })
+        const key = await KeyModel.getKeyWithId(keyId)
+        expect(key).toEqual(expect.anything())
+        expect(key.target).toEqual(testTargetTwo)
     })
 
     it('deleteKey()', async () => {
         await KeyModel.deleteKey(keyId)
-            .then(() => {
-                return KeyModel.getAllKeyIds()
-            })
-            .then((result) => {
-                expect(result).toBe(null)
-                return KeyModel.getAllKeyData()
-            })
-            .then((result) => {
-                expect(result).toBe(null)
-            })
+        const allIds = await KeyModel.getAllKeyIds()
+        expect(allIds).toBe(null)
+        const allData = await KeyModel.getAllKeyData()
+        expect(allData).toBe(null)
     })
 
     it('wipeLocalStore()', async () => {
         await KeyModel.wipeLocalStore()
-            .then(() => {
-                return KeyModel.getKeyWithId(keyId)
-            })
-            .then((result) => {
-                expect(result).toBe(null)
-            })
+        const key = await KeyModel.getKeyWithId(keyId)
+        expect(key).toBe(null)
     })
 
 })

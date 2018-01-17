@@ -9,26 +9,20 @@ export default class KeyModel {
      * @param {object} KeyData 
      */
     static async addOrUpdateKey(keyData) {
-        return KeyModel.getAllKeyIds()
-            .then((Ids) => {
-                let idArray = []
-                if (Ids) {
-                    // Need to check if there's only one Id
-                    if (Ids.includes(keyData.id) || (keyData.id === Ids)) {
-                        return
-                    }
-                    idArray = Ids
-                } else {
-                    idArray = []
-                }
-                idArray.push(keyData.id)
-                const idString = JSON.stringify(idArray)
-                return AsyncStorage.setItem(keyIds, idString)
-            })
-            .then(() => {
-                const dataString = JSON.stringify(keyData)
-                return AsyncStorage.setItem(keyData.id, dataString)
-            })
+        const IDs = await KeyModel.getAllKeyIds()
+        let idArray = []
+        if (IDs) {
+            idArray = IDs
+        } else {
+            idArray = []
+        }
+        if (!idArray.includes(keyData.id)) {
+            idArray.push(keyData.id)
+        }
+        const idString = JSON.stringify(idArray)
+        await AsyncStorage.setItem(keyIds, idString)
+        const dataString = JSON.stringify(keyData)
+        return AsyncStorage.setItem(keyData.id, dataString)
     }
 
     /**
@@ -49,8 +43,7 @@ export default class KeyModel {
           // Back out if we don't have any Ids
           return null
         }
-        const resultArray = JSON.parse(allKeyIds)
-        return resultArray
+        return JSON.parse(allKeyIds)
     }
 
     /**
@@ -58,29 +51,27 @@ export default class KeyModel {
      */
     static async getAllKeyData() {
         // Fetch the array of all the key Ids.
-        return KeyModel.getAllKeyIds()
-            .then((result) => {
-                if (!result) {
-                    // Back out if we don't have any Ids.
-                    return result
-                }
+        const IDs = await KeyModel.getAllKeyIds()
+        if (!IDs) {
+            // Back out if we don't have any Ids.
+            return null
+        }
 
-                // If only one key exists this will be false and we can't call '.forEach'
-                const isArray = Array.isArray(result)
-                if (!isArray) {
-                    return [result]
-                }
+        // If only one key exists this will be false and we can't call '.forEach'
+        const isArray = Array.isArray(IDs)
+        if (!isArray) {
+            return [IDs]
+        }
 
-                const allKeyPromises = []
-                result.forEach(keyId => {
-                    // Fetch key data for each stored Id.
-                    const keyPromise = KeyModel.getKeyWithId(keyId)
-                    allKeyPromises.push(keyPromise)
-                });
+        const allKeyPromises = []
+        IDs.forEach(keyId => {
+            // Fetch key data for each stored Id.
+            const keyPromise = KeyModel.getKeyWithId(keyId)
+            allKeyPromises.push(keyPromise)
+        });
 
-                // Return all the keyData promises.
-                return Promise.all(allKeyPromises)
-            })
+        // Return all the keyData promises.
+        return Promise.all(allKeyPromises)
     }
 
     /**
@@ -100,27 +91,24 @@ export default class KeyModel {
      * @param {string} keyId 
      */
     static async deleteKeyId(keyId) {
-        return KeyModel.getAllKeyIds()
-            .then((Ids) => {
-                let result = JSON.parse(Ids)
-                if (result == keyId) {
-                    return AsyncStorage.removeItem(keyIds)
-                }
-                let foundIndex
-                for (let index = 0; result < Ids.length; index++) {
-                    const element = result[index]
-                    if (element.data === data) {
-                        foundIndex = index
-                        break
-                    }
-                }
-                if (foundIndex) {
-                    result.splice(foundIndex, 1)
-                }
+        const IDs = await KeyModel.getAllKeyIds()
+        if (IDs == keyId) {
+            return AsyncStorage.removeItem(keyIds)
+        }
+        let foundIndex
+        for (let index = 0; index < IDs.length; index++) {
+            const element = IDs[index]
+            if (element.id === keyId) {
+                foundIndex = index
+                break
+            }
+        }
+        if (foundIndex) {
+            IDs.splice(foundIndex, 1)
+        }
 
-                const idString = JSON.stringify(result)
-                return AsyncStorage.setItem(keyIds, idString)
-            })
+        const idString = JSON.stringify(IDs)
+        return AsyncStorage.setItem(keyIds, idString)
     }
 
     /**

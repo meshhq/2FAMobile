@@ -6,14 +6,25 @@ import {
     Text
 } from 'react-native'
 import PropTypes from 'prop-types'
+import Utilities from '../Utilities'
 import CountdownCircle from 'react-native-countdown-circle'
 import NetworkController from '../NetworkController'
-import KeyModel from '../Models/Key';
+import KeyModel from '../Models/Key'
 
 export default class KeyDetailView extends React.Component {
 
     state = {
-        numberOfRefresh: 0
+        currentToken: ''
+    }
+
+    /**
+     * Will refresh token in componentWillMount
+     */
+    async componentWillMount() {
+        // const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
+        // this.setState({
+        //     currentToken: token
+        // })
     }
 
     /**
@@ -21,6 +32,10 @@ export default class KeyDetailView extends React.Component {
      * fetch a new key from the server and restart the timer.
      */
     timerElapsed = () => {
+        // const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
+        // this.setState({
+        //     currentToken: token
+        // })
         // Need to fetch and store new Key information.
         // return NetworkController.updateKey(this.props.key.data)
         //     .then((updatedKey) => {
@@ -41,7 +56,7 @@ export default class KeyDetailView extends React.Component {
                 </View>
                 <View style={ styles.rowContainer }>
                     <Text style={ styles.keyTitleLabel }>Key:</Text>
-                    <Text style={ styles.keyLabel }>{ this.props.keyData.secret }</Text>
+                    <Text style={ styles.keyLabel }>{ this.state.currentToken }</Text>
                 </View>
                 <View style={ styles.rowContainer }>
                     <Text style={ styles.dateLabel }>Date: { this.props.keyData.date }</Text>
@@ -67,7 +82,7 @@ export default class KeyDetailView extends React.Component {
                 </View>
                 <View style={ styles.bottomBufferContainer } />
                 <View style={ styles.bottomTextContainer } >
-                    <Text style={ styles.bottomLabel }>KEY ID: 12345</Text>
+                    <Text style={ styles.bottomLabel }>KEY ID: { this.props.keyData.id }</Text>
                 </View>
             </View>
         )

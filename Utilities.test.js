@@ -2,6 +2,8 @@ import React from 'react'
 
 import Utilities from './Utilities'
 
+import otplib from './Otplib/packages/otplib/index'
+
 describe('KeyModel', () => {
 
     it('getParameterByName()', () => {
@@ -10,6 +12,12 @@ describe('KeyModel', () => {
         const issuer = Utilities.getParameterByName('issuer', testURI)
         expect(secret).toEqual('12345')
         expect(issuer).toEqual('testIssuer')
+    })
+
+    it('generateTokenFromSecret()', () => {
+        const secret = otplib.authenticator.generateSecret()
+        const token = Utilities.generateTokenFromSecret(secret)
+        expect(token).toEqual(expect.anything())
     })
 
 })

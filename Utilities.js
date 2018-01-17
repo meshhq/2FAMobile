@@ -1,4 +1,7 @@
+import otplib from './Otplib/packages/otplib/index'
+
 export default class Utilities {
+
     /**
      * Will format the scan date to 'XX/XX/XXXX' and return it as a string.
      */
@@ -37,4 +40,23 @@ export default class Utilities {
         }
         return decodeURIComponent(results[2].replace(/\+/g, " "))
     }
+
+    /**
+     * Will generate a new token based on the secret we
+     * got from the QR Code.
+     * @param {string} secret
+     */
+    static generateTokenFromSecret = (secret) => {
+        const token = otplib.authenticator.generate(secret)
+        const isValid = otplib.authenticator.verify({
+            secret,
+            token: token
+        })
+        if (isValid) {
+            return token
+        } else {
+            throw new Error('Error Validating Token generated from Secret')
+        }
+    }
+    
 }

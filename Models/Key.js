@@ -69,15 +69,15 @@ export default class KeyModel {
                     return result
                 }
                 // If only one key exists this will be false and we can't call '.forEach'
-                const isArray = Array.isArray(resultArray)
+                const isArray = Array.isArray(result)
                 if (!isArray) {
-                    return KeyModel.getKeyWithId(resultArray).then((key) => {
-                        return [key]
+                    return KeyModel.getKeyWithId(result).then((key) => {
+                        return [JSON.parse(key)]
                     })
                 }
 
                 let allKeyPromises = []
-                resultArray.forEach(keyId => {
+                result.forEach(keyId => {
                     // Fetch key data for each stored Id.
                     const keyPromise = KeyModel.getKeyWithId(keyId)
                     allKeyPromises.push(keyPromise)

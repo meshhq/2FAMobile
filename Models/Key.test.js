@@ -33,7 +33,6 @@ describe('KeyModel', () => {
                 return KeyModel.getKeyWithId(keyId)
             })
             .then((result) => {
-                console.log('heres a get', result)
                 expect(result).toEqual(expect.anything())
             })
     })

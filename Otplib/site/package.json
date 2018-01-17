@@ -1,0 +1,28 @@
+{
+  "name": "otplib-site",
+  "version": "1.0.0",
+  "description": "Website for otplib",
+  "homepage": "https://yeojz.github.io/otplib",
+  "main": "build.js",
+  "scripts": {
+    "build": "BUILD_PKG=site,docs node ./scripts/build.js",
+    "build:dev": "PUBLIC_URL=/ BUILD_PKG=site node ./scripts/build.js",
+    "build:site": "BUILD_PKG=site node ./scripts/build.js",
+    "clean": "rimraf dist",
+    "deploy": "gh-pages -d dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "otplib"
+  ],
+  "author": "Gerald Yeo <contact@fusedthought.com>",
+  "license": "MIT",
+  "dependencies": {
+    "copy": "^0.3.0",
+    "gh-pages": "^0.12.0",
+    "highlight.js": "^9.10.0",
+    "ncp": "^2.0.0",
+    "qrcode": "^0.8.1",
+    "rimraf": "^2.6.1"
+  }
+}

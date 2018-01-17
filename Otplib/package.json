@@ -1,0 +1,85 @@
+{
+  "name": "otplib",
+  "version": "7.0.0",
+  "description": "HMAC-based (HOTP) and Time-based (TOTP) One-Time Password library",
+  "main": "otplib.js",
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "build:browser": "webpack --config ./scripts/webpack.config.js",
+    "build:docs": "jsdoc --configure jsdoc.json --verbose",
+    "build:module": "./scripts/build-module.sh",
+    "build:rollup": "rollup -c scripts/rollup.config.js",
+    "build:transpile": "babel dist --out-dir dist",
+    "clean": "rimraf dist coverage docs",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "deploy-gh-pages": "./scripts/build-site.sh",
+    "deploy-package": "./scripts/build-publish.sh",
+    "lint": "eslint --ext js src",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yeojz/otplib.git"
+  },
+  "keywords": [
+    "otp",
+    "totp",
+    "hotp",
+    "one time password",
+    "google authenticator",
+    "authenticator",
+    "authentication",
+    "2FA",
+    "2 factor",
+    "node",
+    "browser"
+  ],
+  "author": "Gerald Yeo <contact@fusedthought.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yeojz/otplib/issues"
+  },
+  "homepage": "https://yeojz.github.io/otplib",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.24.1",
+    "babel-eslint": "^7.2.1",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-module-resolver": "^2.7.1",
+    "babel-plugin-transform-class-properties": "^6.23.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-es2015": "^6.24.0",
+    "coveralls": "^2.13.0",
+    "create-hmac": "^1.1.4",
+    "eslint": "^3.19.0",
+    "jest": "^20.0.4",
+    "jsdoc": "^3.4.3",
+    "minami": "^1.1.1",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.49.2",
+    "rollup-plugin-cleanup": "^1.0.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "webpack": "^2.3.3"
+  },
+  "dependencies": {
+    "thirty-two": "1.0.2"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/scripts/*"
+    ],
+    "modulePaths": [
+      "<rootDir>/packages/"
+    ],
+    "resetMocks": true,
+    "setupFiles": [],
+    "testPathIgnorePatterns": [
+      "/dist/",
+      "/node_modules/",
+      "<rootDir>/scripts/*",
+      "<rootDir>/tests/"
+    ]
+  }
+}

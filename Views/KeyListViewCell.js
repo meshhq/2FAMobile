@@ -15,10 +15,6 @@ import KeyModel from '../Models/Key';
 
 export default class KeyListViewCell extends React.PureComponent {
 
-    componentWillMount() {
-        console.log('Data: ', this.props.keyData)
-    }
-
     /**
      * Will push the KeyDetailView on screen with the Key data
      * from the cell pressed.
@@ -26,7 +22,7 @@ export default class KeyListViewCell extends React.PureComponent {
     cellPressed = () => {
         this.props.navigator.push({
             component: KeyDetailView,
-            passProps: { key: this.props.key }
+            passProps: { keyData: this.props.keyData }
         })
     }
 
@@ -72,10 +68,6 @@ export default class KeyListViewCell extends React.PureComponent {
         )
     }
 
-}
-
-KeyListViewCell.propTypes = {
-    keyData: PropTypes.object
 }
 
 const styles = StyleSheet.create({

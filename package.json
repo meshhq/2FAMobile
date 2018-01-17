@@ -24,6 +24,7 @@
   "dependencies": {
     "buffer": "^5.0.8",
     "expo": "^23.0.4",
+    "otplib": "^7.0.0",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-countdown-circle": "^2.0.0",

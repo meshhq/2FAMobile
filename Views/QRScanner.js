@@ -7,7 +7,9 @@ import {
     Alert
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
-import CodeModel from '../Models/Code'
+import NetworkController from '../NetworkController'
+import DeviceModel from '../Models/Device'
+import KeyModel from '../Models/Key'
 import Utilities from '../Utilities'
 
 export default class QRScanner extends React.Component {
@@ -29,22 +31,45 @@ export default class QRScanner extends React.Component {
     }
 
     /**
-     * Will handle the QR Code payload after a scan occurs 
+     * Will handle the QR Key payload after a scan occurs 
      */
     handleQRCodeResult = (result) => {
         if (this.state.alertShowing === false) {
-            const codeData = this.createCodeData(result)
-            CodeModel.addCode(codeData).then(() => {
-                Alert.alert('Scan Success!', 'View your code on the home screen', [{text: 'Dismiss'}], { onDismiss: this.alertWasDismissed() })
-                this.setState({ alertShowing: true })
-            })
+            DeviceModel.getDeviceInfo()
+                .then((deviceInfo) => {
+                    const deviceObject = JSON.parse(deviceInfo)
+                    return NetworkController.getKeys(deviceObject.uuid)
+                })
+                .then((response) => {
+                    return this.handleKeysResponse(response)
+                })
+                .then(() => {
+                    this.showAlert('Scan Success!', 'View your key on the home screen')
+                })
         }
+    }
+
+    /**
+     * Will handle the Response sent back from the server
+     * and save it to the local store.
+     */
+    handleKeysResponse = (response) => {
+        const keyData = this.createKeyData(response)
+        return KeyModel.addOrUpdateKey(keyData)
+    }
+
+    /**
+     * Will show an alert message over the camera view.
+     */
+    showAlert = (title, message) => {
+        Alert.alert(title, message, [{text: 'Dismiss'}], { onDismiss: this.alertWasDismissed() })
+        this.setState({ alertShowing: true })
     }
 
     /**
      * Will format the QR scan data and add the current date.
      */
-    createCodeData = (result) => {
+    createKeyData = (result) => {
         const date = Utilities.getCurrentFormattedDate()
         return { 
             date: date,

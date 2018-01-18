@@ -2,15 +2,43 @@ import React from 'react'
 
 import {
     TouchableOpacity,
-    StyleSheet, 
+    StyleSheet,
     Image,
     View,
     Text
 } from 'react-native'
-import CodeDetailView from './CodeDetailView'
+import PropTypes from 'prop-types'
+import NetworkController from '../NetworkController'
+import KeyDetailView from './KeyDetailView'
 import Swipeout from 'react-native-swipeout'
+import KeyModel from '../Models/Key';
 
-export default class CodeListViewCell extends React.PureComponent {
+export default class KeyListViewCell extends React.PureComponent {
+
+    /**
+     * Will push the KeyDetailView on screen with the Key data
+     * from the cell pressed.
+     */
+    cellPressed = () => {
+        this.props.navigator.push({
+            component: KeyDetailView,
+            passProps: { key: this.props.key }
+        })
+    }
+
+    /**
+     * Action taken when the swipe to delete button is pressed.
+     */
+    deleteRow = () => {
+        return NetworkController.deleteKey(this.props.key.data)
+            .then((response) => {
+                return KeyModel.deleteKey(response.id)
+            })
+            .then(() => {
+                // This is passed through from the KeyListView
+                this.props.deleteHandler(this.props.key.id)
+            })
+    }
 
     render() {
         const swipeOutButtons = [
@@ -25,9 +53,9 @@ export default class CodeListViewCell extends React.PureComponent {
             <Swipeout right={swipeOutButtons}>
                 <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
                     <View>
-                        <Text style={ styles.subtitleLabel }>Provider: {this.props.code.target}</Text>
-                        <Text style={ styles.titleLabel }>{this.props.code.data}</Text>
-                        <Text style={ styles.subtitleLabel }>Date: {this.props.code.date}</Text>
+                        <Text style={ styles.subtitleLabel }>Provider: {this.props.keyData.target}</Text>
+                        <Text style={ styles.titleLabel }>{this.props.keyData.data}</Text>
+                        <Text style={ styles.subtitleLabel }>Date: {this.props.keyData.date}</Text>
                     </View>
                     <View>
                         <Image
@@ -40,30 +68,10 @@ export default class CodeListViewCell extends React.PureComponent {
         )
     }
 
-    /**
-     * Will push the CodeDetailView on screen with the Code data
-     * from the cell pressed.
-     */
-    cellPressed = () => {
-        this.props.navigator.push({
-            component: CodeDetailView,
-            passProps: { code: this.props.code }
-        })
-    }
+}
 
-    /**
-     * Action taken when the swipe to delete button is pressed.
-     */
-    deleteRow = () => {
-        /**
-         * Need to hook up this delete to server and local store.
-         * 
-         * Note: Local store deletion will change when we have Code Ids
-         * from the server
-         */
-        console.log('Delete Row')
-    }
-
+KeyListViewCell.propTypes = {
+    keyData: PropTypes.object
 }
 
 const styles = StyleSheet.create({

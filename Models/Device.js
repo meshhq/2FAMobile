@@ -8,13 +8,18 @@ const deviceKey = 'DeviceKey'
 export default class DeviceModel {
 
     /**
-     * Get the info for the current device.
+     * Get the info for the current device. Or call saveDeviceInfo()
+     * if there is no info saved to this device.
      */
     static async getDeviceInfo() {
-        return AsyncStorage.getItem(deviceKey)
-            .then((result) => {
-                return result
-            })
+        const deviceInfo = await AsyncStorage.getItem(deviceKey)
+        if (deviceInfo) {
+            return JSON.parse(deviceInfo)
+        }
+        // No info found, lets save the current info and return it
+        await DeviceModel.saveDeviceInfo()
+        const deviceString = await AsyncStorage.getItem(deviceKey)
+        return JSON.parse(deviceString)
     }
 
     /**

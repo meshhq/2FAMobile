@@ -10,37 +10,17 @@ jest.setMock('AsyncStorage', AsyncStorage)
 describe('DeviceModel', () => {
 
     it('getDeviceInfo()', async () => {
-        await DeviceModel.getDeviceInfo()
-            .then((result) => {
-                expect(result).toEqual(null)
-            })
+        const deviceInfo = await DeviceModel.getDeviceInfo()
+        expect(deviceInfo).toEqual(expect.anything())
+        expect(deviceInfo.uuid).toEqual(expect.anything())
+        await DeviceModel.removeDeviceInfo()
     })
 
     it('saveDeviceInfo()', async () => {
         await DeviceModel.saveDeviceInfo()
-            .then(() => {
-                return DeviceModel.getDeviceInfo()
-            })
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-            })
+        const deviceInfo = await DeviceModel.getDeviceInfo()
+        expect(deviceInfo).toEqual(expect.anything())
+        expect(deviceInfo.uuid).toEqual(expect.anything())
     })
-
-    it('getDeviceInfo()', async () => {
-        await DeviceModel.getDeviceInfo()
-            .then((result) => {
-                expect(result).toEqual(expect.anything())
-            })
-    })
-
-    it('removeDeviceInfo()', async () => {
-        await DeviceModel.removeDeviceInfo()
-            .then(() => {
-                return DeviceModel.getDeviceInfo()
-            })
-            .then((result) => {
-                expect(result).toEqual(null)
-            })
-    })
-
+    
 })

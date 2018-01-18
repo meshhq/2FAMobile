@@ -12,12 +12,13 @@ import {
 } from 'react-native'
 
 import NavigationBar from 'react-native-navbar'
-import CodeListViewCell from './CodeListViewCell'
+import KeyListViewCell from './KeyListViewCell'
 import QRScanner from './QRScanner'
-import CodeModel from '../Models/Code'
+import KeyModel from '../Models/Key'
 import DeviceModel from '../Models/Device'
+import NetworkController from '../NetworkController'
 
-export default class CodeListView extends React.Component {
+export default class KeyListView extends React.Component {
 
     /**
      * 'refreshing' is required as a prop for the built in "Pull to Refresh" on the
@@ -31,7 +32,7 @@ export default class CodeListView extends React.Component {
 
     // Configuration for the Nav bar title
     titleConfig = {
-        title: 'My Codes'
+        title: 'My Keys'
     }
     
     // Configuration for the rightBarButtonItem
@@ -48,34 +49,45 @@ export default class CodeListView extends React.Component {
      * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
-        await DeviceModel.getDeviceInfo()
-            .then((device) => {
-                if (device) {
-                    // If the device has been registered we'll call for a refresh.
-                    return this.refreshData()
-                } else {
-                    // Otherwise we'll create a new UUID for this device.
-                    return DeviceModel.saveDeviceInfo()
-                    .then(() => {
-                        this.setState({ isLoading: false })
-                    })
-                }
-            }).catch((error) => {
-                console.log('Error:', error)
-            })
+        try {
+            await DeviceModel.getDeviceInfo()
+            await this.refreshData()
+        } catch (err) {
+            console.log('Key List View Will Mount Error: ', error)
+        }
     } 
 
     /**
-     * Will retrieve all the Codes from the local store and refresh the table.
+     * Will retrieve all the Keys from the local store and refresh the table.
      */
     refreshData = async () => {
-        await CodeModel.getAllCodes().then((result) => {
-            const restoredArray = JSON.parse(result)
-            return this.setState({ 
+        try {
+            const allKeyData = await KeyModel.getAllKeyData()
+            const restoredArray = JSON.parse(allKeyData)
+            return this.setState({
                 isLoading: false,
-                data: restoredArray 
+                data: restoredArray
             })
-        })
+        } catch (err) {
+            console.log('Error: ', err)
+        }
+    }
+
+    /**
+     * Create the view used as a separator.
+     */
+    renderSeparator() {
+        return (
+            <View style={ styles.separator }/>
+        )
+    }
+
+    /**
+     * Will handle the local and remote delete calls then execute 
+     * a table reload when a 'swipe to delete' is executed.
+     */
+    deleteHandler = (keyId) => {
+        return this.refreshData()
     }
 
     render() {
@@ -100,7 +112,11 @@ export default class CodeListView extends React.Component {
                     />
                     <FlatList
                         data={ this.state.data }
-                        renderItem={({item}) => <CodeListViewCell code={item} navigator={this.props.navigator} />}
+                        renderItem={({item}) => <KeyListViewCell 
+                                                    key={item} 
+                                                    navigator={this.props.navigator} 
+                                                    deleteHandler={this.deleteHandler}
+                                                />}
                         keyExtractor={(item, index) => index}
                         refreshing= { this.state.refreshing }
                         onRefresh={ this.refreshData }
@@ -111,14 +127,6 @@ export default class CodeListView extends React.Component {
         }
     }
 
-    /**
-     * Create the view used as a separator.
-     */
-    renderSeparator() {
-        return (
-            <View style={ styles.separator }/>
-        )
-    }
 }
 
 const styles = StyleSheet.create({

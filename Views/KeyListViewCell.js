@@ -22,7 +22,7 @@ export default class KeyListViewCell extends React.PureComponent {
     cellPressed = () => {
         this.props.navigator.push({
             component: KeyDetailView,
-            passProps: { key: this.props.key }
+            passProps: { keyData: this.props.keyData }
         })
     }
 
@@ -30,14 +30,14 @@ export default class KeyListViewCell extends React.PureComponent {
      * Action taken when the swipe to delete button is pressed.
      */
     deleteRow = () => {
-        return NetworkController.deleteKey(this.props.key.data)
-            .then((response) => {
-                return KeyModel.deleteKey(response.id)
-            })
-            .then(() => {
-                // This is passed through from the KeyListView
-                this.props.deleteHandler(this.props.key.id)
-            })
+        // return NetworkController.deleteKey(this.props.key.data)
+        //     .then((response) => {
+        //         return KeyModel.deleteKey(response.id)
+        //     })
+        //     .then(() => {
+        //         // This is passed through from the KeyListView
+        //         this.props.deleteHandler(this.props.key.id)
+        //     })
     }
 
     render() {
@@ -53,8 +53,8 @@ export default class KeyListViewCell extends React.PureComponent {
             <Swipeout right={swipeOutButtons}>
                 <TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
                     <View>
-                        <Text style={ styles.subtitleLabel }>Provider: {this.props.keyData.target}</Text>
-                        <Text style={ styles.titleLabel }>{this.props.keyData.data}</Text>
+                        <Text style={ styles.subtitleLabel }>Provider: {this.props.keyData.issuer}</Text>
+                        <Text style={ styles.titleLabel }>{this.props.keyData.issuer}</Text>
                         <Text style={ styles.subtitleLabel }>Date: {this.props.keyData.date}</Text>
                     </View>
                     <View>

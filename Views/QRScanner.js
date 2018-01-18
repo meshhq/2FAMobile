@@ -38,14 +38,12 @@ export default class QRScanner extends React.Component {
             DeviceModel.getDeviceInfo()
                 .then((deviceInfo) => {
                     const deviceObject = JSON.parse(deviceInfo)
-                    return NetworkController.getKeys(deviceObject.uuid)
-                })
-                .then((response) => {
-                    return this.handleKeysResponse(response)
+                    const keyData = this.createKeyData(result.data)
+                    return KeyModel.addOrUpdateKey(keyData)
                 })
                 .then(() => {
                     this.showAlert('Scan Success!', 'View your key on the home screen')
-                })
+                })    
         }
     }
 
@@ -54,8 +52,8 @@ export default class QRScanner extends React.Component {
      * and save it to the local store.
      */
     handleKeysResponse = (response) => {
-        const keyData = this.createKeyData(response)
-        return KeyModel.addOrUpdateKey(keyData)
+        // TODO: Need to confirm this response has everything we need
+        return KeyModel.addOrUpdateKey(response)
     }
 
     /**
@@ -67,25 +65,29 @@ export default class QRScanner extends React.Component {
     }
 
     /**
-     * Will format the QR scan data and add the current date.
-     */
-    createKeyData = (result) => {
-        const date = Utilities.getCurrentFormattedDate()
-        return { 
-            date: date,
-            data: result.data,
-            target: result.target,
-            type: result.type
-        }
-    }
-
-    /**
      * Set the state to indicate that we're ready for another scan.
      */
     alertWasDismissed = () => {
         // Note: I cannot get this to fire `after` the alert is dismissed... it always fires when the alert shows
         console.log('DISMISSED')
         this.setState({ alertShowing: false })
+    }
+
+    /**
+     * Parse the QR Code URI for the secret and issuer. Then
+     * we'll build the object that will be sent to the server.
+     * @param {string} dataURI
+     */
+    createKeyData = (dataURI) => {
+        const date = Utilities.getCurrentFormattedDate()
+        const issuer = Utilities.getParameterByName('issuer', dataURI)
+        const secret = Utilities.getParameterByName('secret', dataURI)
+        return {
+            id: '1',
+            date: date,
+            issuer: issuer,
+            secret: secret
+        }
     }
 
     render = () => {

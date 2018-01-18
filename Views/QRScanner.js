@@ -37,7 +37,6 @@ export default class QRScanner extends React.Component {
         if (this.state.alertShowing === false) {
             DeviceModel.getDeviceInfo()
                 .then((deviceInfo) => {
-                    const deviceObject = JSON.parse(deviceInfo)
                     const keyData = this.createKeyData(result.data)
                     return KeyModel.addOrUpdateKey(keyData)
                 })

@@ -70,9 +70,9 @@ export default class KeyListViewCell extends React.PureComponent {
 
 }
 
-KeyListViewCell.propTypes = {
-    keyData: PropTypes.object
-}
+// KeyListViewCell.propTypes = {
+//     keyData: PropTypes.object
+// }
 
 const styles = StyleSheet.create({
     container: {

@@ -113,7 +113,7 @@ export default class KeyListView extends React.Component {
                     <FlatList
                         data={ this.state.data }
                         renderItem={({item}) => <KeyListViewCell 
-                                                    key={item} 
+                                                    keyData={item} 
                                                     navigator={this.props.navigator} 
                                                     deleteHandler={this.deleteHandler}
                                                 />}

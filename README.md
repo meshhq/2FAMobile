@@ -1,4 +1,4 @@
-# Two Factor Authenticator
+# Two Factor Authenticator Mobile Client
 
 This project is a mobile application build with react-native that will allow you to generate and store time-based one-time passwords ([TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm)).
 
@@ -19,7 +19,7 @@ Run `npm start` from this project's root directory to see the QR code.
 
 If Yarn was installed when the project was initialized, then dependencies will have been installed via Yarn, and you should probably use it to run these commands as well. Unlike dependency installation, command running syntax is identical for Yarn and NPM at the time of this writing.
 
-### `npm run start:ios`
+#### `npm run start:ios`
 
 Runs your app in development mode.
 
@@ -27,7 +27,7 @@ Open it in the [Expo app](https://expo.io) on your phone to view it. It will rel
 
 This command will also open and run the app on the Xcode iOS simulator.
 
-### `npm run start:android`
+#### `npm run start:android`
 
 Runs your app in development mode.
 

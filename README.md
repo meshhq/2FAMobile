@@ -2,6 +2,8 @@
 
 This project is a mobile application build with react-native that will allow you to generate and store time-based one-time passwords ([TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm)).
 
+[![CircleCI](https://circleci.com/gh/meshhq/2FAMobile/tree/master.svg?style=svg)](https://circleci.com/gh/meshhq/2FAMobile/tree/master)
+
 ## Getting Started
 
 Clone this repository to your local machine.

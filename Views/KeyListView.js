@@ -49,26 +49,28 @@ export default class KeyListView extends React.Component {
      * Will refresh the FlatList data when the Component mounts.
      */
     async componentWillMount() {
-        await DeviceModel.getDeviceInfo()
-            .then((device) => {
-                // getDeviceInfo() will find the device info, or create it.
-                return this.refreshData()
-            }).catch((error) => {
-                console.log('Error:', error)
-            })
+        try {
+            await DeviceModel.getDeviceInfo()
+            await this.refreshData()
+        } catch (err) {
+            console.log('Key List View Will Mount Error: ', error)
+        }
     } 
 
     /**
      * Will retrieve all the Keys from the local store and refresh the table.
      */
     refreshData = async () => {
-        await KeyModel.getAllKeyData().then((result) => {
-            const restoredArray = JSON.parse(result)
-            return this.setState({ 
+        try {
+            const allKeyData = await KeyModel.getAllKeyData()
+            const restoredArray = JSON.parse(allKeyData)
+            return this.setState({
                 isLoading: false,
-                data: restoredArray 
+                data: restoredArray
             })
-        })
+        } catch (err) {
+            console.log('Error: ', err)
+        }
     }
 
     /**

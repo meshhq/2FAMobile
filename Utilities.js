@@ -1,3 +1,6 @@
+
+const clearBit = require('clearbit')(process.env.CLEAR_BIT_API_KEY)
+
 export default class Utilities {
     /**
      * Will format the scan date to 'XX/XX/XXXX' and return it as a string.
@@ -36,5 +39,21 @@ export default class Utilities {
             return ''
         }
         return decodeURIComponent(results[2].replace(/\+/g, " "))
+    }
+
+    /**
+     * This will hit the ClearBit API to get more info on the
+     * company domain provided.
+     * @param {string} companyDomain
+     */
+    static getClearBitData = async (companyDomain) => {
+        const Company = clearBit.Company
+        return Company.find({domain: companyDomain})
+            .then((company) => {
+                return companyData
+            })
+            .catch((err) => {
+                console.error(err)
+            })
     }
 }

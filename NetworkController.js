@@ -1,4 +1,4 @@
-const baseURL = 'localhost:8080'
+const baseURL = 'http://localhost:1323'
 
 export default class NetworkController {
 
@@ -8,15 +8,36 @@ export default class NetworkController {
      */
     static async getKeys(userId) {
         const url = `${baseURL}/keys?user_id=${userId}`
-        return fetch(url, {
+        return await fetch(url, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }  
         })
-        .then((response) => {
-            return response
+        .catch((error) => {
+            console.log('Get Keys Error: ', error)
+        })
+    }
+
+    /**
+     * A `POST` method to create a new User object.
+     * @param {object}
+     */
+    static createUser = (userData) => {
+        return await fetch(baseURL + '', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: userData.id,
+                deviceId: userData.deviceId
+            })
+        })
+        .catch((error) => {
+            console.log('Create User Error: ', error)
         })
     }
 
@@ -26,7 +47,7 @@ export default class NetworkController {
      * @param {object} device
      */
     static async createKey(device) {
-        return fetch(baseURL + '/keys', {
+        return await fetch(baseURL + '/keys', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -38,8 +59,8 @@ export default class NetworkController {
                 provider: ''
             })
         })
-        .then((response) => {
-            return response
+        .catch((error) => {
+            console.log('Create Key Error: ', error)
         })
     }
 

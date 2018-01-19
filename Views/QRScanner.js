@@ -34,16 +34,17 @@ export default class QRScanner extends React.Component {
      * Will handle the QR Key payload after a scan occurs 
      */
     handleQRCodeResult = (result) => {
-        if (this.state.alertShowing === false) {
-            DeviceModel.getDeviceInfo()
-                .then((deviceInfo) => {
-                    const keyData = this.createKeyData(result.data)
-                    return KeyModel.addOrUpdateKey(keyData)
-                })
-                .then(() => {
-                    this.showAlert('Scan Success!', 'View your key on the home screen')
-                })    
-        }
+        console.log('RESULT: ', result)
+        // if (this.state.alertShowing === false) {
+        //     DeviceModel.getDeviceInfo()
+        //         .then((deviceInfo) => {
+        //             const keyData = this.createKeyData(result.data)
+        //             return KeyModel.addOrUpdateKey(keyData)
+        //         })
+        //         .then(() => {
+        //             this.showAlert('Scan Success!', 'View your key on the home screen')
+        //         })    
+        // }
     }
 
     /**

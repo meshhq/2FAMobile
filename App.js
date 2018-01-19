@@ -9,6 +9,13 @@ import KeyListView from './Views/KeyListView'
 
 export default class App extends React.Component {
 
+  /**
+   * Will configure the local .env file.
+   */
+  componentWillMount() {
+    require('dotenv').config()
+  }
+
   render() {
     return (
       <NavigatorIOS

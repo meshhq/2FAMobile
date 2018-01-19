@@ -1,4 +1,4 @@
-import KeyModel from './Key'
+import KeyModel from '../../Models/Key'
 
 import MockStorage from '../MockStorage'
 

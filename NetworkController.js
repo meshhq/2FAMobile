@@ -21,32 +21,12 @@ export default class NetworkController {
     }
 
     /**
-     * A `POST` method to create a new User object.
-     * @param {object}
-     */
-    static createUser = (userData) => {
-        return await fetch(baseURL + '', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: userData.id,
-                deviceId: userData.deviceId
-            })
-        })
-        .catch((error) => {
-            console.log('Create User Error: ', error)
-        })
-    }
-
-    /**
      * A `POST` method to create a new key with the given body 
      * for the current device.
      * @param {object} device
+     * @param {object} QRData
      */
-    static async createKey(device) {
+    static async createKey(device, QRData) {
         return await fetch(baseURL + '/keys', {
             method: 'POST',
             headers: {
@@ -55,8 +35,8 @@ export default class NetworkController {
             },
             body: JSON.stringify({
                 deviceId: device.uuid,
-                key: '',
-                provider: ''
+                key: QRData.secret,
+                issuer: QRData.issuer
             })
         })
         .catch((error) => {
@@ -67,11 +47,12 @@ export default class NetworkController {
     /**
      * A `PUT` method to update a key with the given data in the 
      * Request body.
-     * @param {string} keyId 
+     * @param {string} keyData
+     * @param {string} deviceId
      */
-    static async updateKey(keyId) {
-        const url = `${baseURL}/keys/${keyId}`
-        return fetch(url, {
+    static async updateKey(keyData, deviceId) {
+        const url = `${baseURL}/keys/${keyData.id}`
+        return await fetch(url, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -79,12 +60,12 @@ export default class NetworkController {
             },
             body: JSON.stringify({
                 deviceId: uuid,
-                key: '',
-                provider: ''
+                key: keyData.key,
+                issuer: keyData.issuer
             })
         })
-        .then((response) => {
-            return response
+        .catch((error) => {
+            console.log('Update Key Error: ', error)
         })
     }
 
@@ -94,15 +75,15 @@ export default class NetworkController {
      */
     static async deleteKey(keyId) {
         const url = `${baseURL}/keys/${keyId}`
-        return fetch(url, {
+        return await fetch(url, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         })
-        .then((response) => {
-            return response
+        .catch((error) => {
+            console.log('Delete Key Error: ', error)
         })
     }
 

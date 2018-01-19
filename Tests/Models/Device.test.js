@@ -1,4 +1,4 @@
-import DeviceModel from './Device'
+import DeviceModel from '../../Models/Device'
 
 import MockStorage from '../MockStorage'
 

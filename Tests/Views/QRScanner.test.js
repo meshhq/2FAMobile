@@ -1,5 +1,5 @@
 import React from 'react';
-import QRScanner from './QRScanner';
+import QRScanner from '../../Views/QRScanner';
 
 import renderer from 'react-test-renderer';
 

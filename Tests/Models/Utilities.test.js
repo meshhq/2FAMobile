@@ -1,10 +1,10 @@
 import React from 'react'
 
-import Utilities from './Utilities'
-
-import otplib from './Otplib/packages/otplib/index'
+import Utilities from '../../Utilities'
 
 describe('KeyModel', () => {
+
+    console.log('API key?', process.env.CLEAR_BIT_API_KEY)
 
     it('getParameterByName()', () => {
         const testURI = 'otpauth://totp/test?secret=12345&issuer=testIssuer'

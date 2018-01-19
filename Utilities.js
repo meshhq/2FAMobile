@@ -1,5 +1,5 @@
 
-const clearBit = require('clearbit')(process.env.CLEAR_BIT_API_KEY)
+import { CLEAR_BIT_API_KEY } from 'react-native-dotenv'
 
 export default class Utilities {
     /**
@@ -48,10 +48,7 @@ export default class Utilities {
      */
     static getClearBitData = async (companyDomain) => {
         const Company = clearBit.Company
-        return Company.find({domain: companyDomain})
-            .then((company) => {
-                return companyData
-            })
+        return await Company.find({domain: companyDomain})
             .catch((err) => {
                 console.error(err)
             })

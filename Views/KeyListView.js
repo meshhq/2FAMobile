@@ -103,26 +103,40 @@ export default class KeyListView extends React.Component {
                 </View>
             )
         } else {
-            return (
-                <View style={ styles.container }>
-                    <NavigationBar 
-                        title={ this.titleConfig }
-                        rightButton={ this.rightBarButtonConfig }
-                    />
-                    <FlatList
-                        data={ this.state.data }
-                        renderItem={({item}) => <KeyListViewCell 
-                                                    keyData={item} 
-                                                    navigator={this.props.navigator} 
-                                                    deleteHandler={this.deleteHandler}
-                                                />}
-                        keyExtractor={(item, index) => index}
-                        refreshing= { this.state.refreshing }
-                        onRefresh={ this.refreshData }
-                        ItemSeparatorComponent={this.renderSeparator}
-                    />
-                </View>
-            )
+            if (this.state.data.length === 0) {
+                return (
+                    <View style={ styles.container }>
+                        <NavigationBar 
+                            title={ this.titleConfig }
+                            rightButton={ this.rightBarButtonConfig }
+                        />
+                        <View style={ styles.noAccountsContainer }>
+                            <Text style={ styles.noAccountsLabel }>No keys found.</Text>
+                        </View>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={ styles.container }>
+                        <NavigationBar 
+                            title={ this.titleConfig }
+                            rightButton={ this.rightBarButtonConfig }
+                        />
+                        <FlatList
+                            data={ this.state.data }
+                            renderItem={({item}) => <KeyListViewCell 
+                                                        keyData={item} 
+                                                        navigator={this.props.navigator} 
+                                                        deleteHandler={this.deleteHandler}
+                                                    />}
+                            keyExtractor={(item, index) => index}
+                            refreshing= { this.state.refreshing }
+                            onRefresh={ this.refreshData }
+                            ItemSeparatorComponent={this.renderSeparator}
+                        />
+                    </View>
+                )
+            }
         }
     }
 
@@ -141,6 +155,15 @@ const styles = StyleSheet.create({
     spinnerContainer: {
         flex: 1,
         justifyContent: 'center'
+    },
+    noAccountsContainer: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    noAccountsLabel: {
+        flex: 1,
+        color: '#63acff',
+        fontSize: 28
     },
     flatList: {
         margin: 8

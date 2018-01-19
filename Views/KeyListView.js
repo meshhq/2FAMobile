@@ -63,10 +63,9 @@ export default class KeyListView extends React.Component {
     refreshData = async () => {
         try {
             const allKeyData = await KeyModel.getAllKeyData()
-            const restoredArray = JSON.parse(allKeyData)
             return this.setState({
                 isLoading: false,
-                data: restoredArray
+                data: allKeyData
             })
         } catch (err) {
             console.log('Error: ', err)
@@ -113,7 +112,7 @@ export default class KeyListView extends React.Component {
                     <FlatList
                         data={ this.state.data }
                         renderItem={({item}) => <KeyListViewCell 
-                                                    key={item} 
+                                                    keyData={item} 
                                                     navigator={this.props.navigator} 
                                                     deleteHandler={this.deleteHandler}
                                                 />}

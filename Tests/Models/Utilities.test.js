@@ -4,8 +4,6 @@ import Utilities from '../../Utilities'
 
 describe('KeyModel', () => {
 
-    console.log('API key?', process.env.CLEAR_BIT_API_KEY)
-
     it('getParameterByName()', () => {
         const testURI = 'otpauth://totp/test?secret=12345&issuer=testIssuer'
         const secret = Utilities.getParameterByName('secret', testURI)

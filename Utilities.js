@@ -1,5 +1,5 @@
 
-const clearBit = require('clearbit')('sk_961f75cf06371c5e3c075a3678b65e9a')
+const clearBit = require('clearbit')(process.env.CLEAR_BIT_API_KEY)
 
 export default class Utilities {
     /**

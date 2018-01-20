@@ -30,7 +30,7 @@ export default class KeyListViewCell extends React.PureComponent {
      * Action taken when the swipe to delete button is pressed.
      */
     deleteRow = () => {
-        return NetworkController.deleteKey(this.props.key.data)
+        return NetworkController.deleteKey(this.props.keyData.id)
             .then((response) => {
                 return KeyModel.deleteKey(response.id)
             })

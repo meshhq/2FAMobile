@@ -103,7 +103,7 @@ export default class KeyListView extends React.Component {
                 </View>
             )
         } else {
-            if (this.state.data.length === 0) {
+            if (!this.state.data || this.state.data.length === 0) {
                 return (
                     <View style={ styles.container }>
                         <NavigationBar 

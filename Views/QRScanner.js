@@ -31,29 +31,30 @@ export default class QRScanner extends React.Component {
     }
 
     /**
-     * Will handle the QR Key payload after a scan occurs 
+     * Will handle the QR Key payload after a scan occurs
+     * QR Payload Example -
+     * {
+     *   "data": "otpauth://totp/algorithm=SHA1&digits=6&issuer=XXXX&period=30&secret=XXXXXXXXX",
+     *   "target": 0000,
+     *   "type": "org.iso.QRCode"
+     * }
      */
     handleQRCodeResult = (result) => {
-        console.log('RESULT: ', result)
-        // if (this.state.alertShowing === false) {
-        //     DeviceModel.getDeviceInfo()
-        //         .then((deviceInfo) => {
-        //             const keyData = this.createKeyData(result.data)
-        //             return KeyModel.addOrUpdateKey(keyData)
-        //         })
-        //         .then(() => {
-        //             this.showAlert('Scan Success!', 'View your key on the home screen')
-        //         })    
-        // }
-    }
-
-    /**
-     * Will handle the Response sent back from the server
-     * and save it to the local store.
-     */
-    handleKeysResponse = (response) => {
-        // TODO: Need to confirm this response has everything we need
-        return KeyModel.addOrUpdateKey(response)
+        if (this.state.alertShowing === false) {
+            DeviceModel.getDeviceInfo()
+                .then((deviceInfo) => {
+                    const keyData = this.createKeyData(result.data)
+                    return NetworkController.createKey(deviceInfo, keyData)
+                })
+                .then((response) => {
+                    return KeyModel.addOrUpdateKey(keyData)
+                })
+                .then(() => {
+                    this.showAlert('Scan Success!', 'View your key on the home screen')
+                }).catch((error) => {
+                    this.showAlert('Error Creating Key', ('Error: ', error, ' Please try again.'))
+                })
+        }
     }
 
     /**
@@ -83,7 +84,6 @@ export default class QRScanner extends React.Component {
         const issuer = Utilities.getParameterByName('issuer', dataURI)
         const secret = Utilities.getParameterByName('secret', dataURI)
         return {
-            id: '1',
             date: date,
             issuer: issuer,
             secret: secret

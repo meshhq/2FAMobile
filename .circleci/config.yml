@@ -3,6 +3,9 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+machine:
+  environment:
+    CLEAR_BIT_API_KEY: "sk_37a14390bceb532aea4be85ca5e1634e"
 jobs:
   build:
     docker:

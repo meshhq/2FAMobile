@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
     },
     noAccountsContainer: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     noAccountsLabel: {
         flex: 1,

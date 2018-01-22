@@ -34,9 +34,9 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                deviceId: device.uuid,
+                user_id: device.uuid,
                 key: QRData.secret,
-                issuer: QRData.issuer
+                provider: QRData.issuer
             })
         })
         .catch((error) => {
@@ -47,11 +47,11 @@ export default class NetworkController {
     /**
      * A `PUT` method to update a key with the given data in the 
      * Request body.
-     * @param {string} keyData
+     * @param {object} keyData
      * @param {string} deviceId
      */
-    static async updateKey(keyData, deviceId) {
-        const url = `${baseURL}/keys/${keyData.id}`
+    static async updateKey(keyData) {
+        const url = `${baseURL}/keys/${keyData.ID}`
         return await fetch(url, {
             method: 'PUT',
             headers: {
@@ -59,9 +59,7 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                deviceId: uuid,
-                key: keyData.key,
-                issuer: keyData.issuer
+                key: keyData.key
             })
         })
         .catch((error) => {

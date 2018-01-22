@@ -11,8 +11,8 @@ describe('DeviceModel', () => {
 
     it('getDeviceInfo()', async () => {
         const deviceInfo = await DeviceModel.getDeviceInfo()
-        expect(deviceInfo).toEqual(expect.anything())
-        expect(deviceInfo.uuid).toEqual(expect.anything())
+        expect(deviceInfo).not.toEqual(null)
+        expect(deviceInfo.uuid).not.toEqual(null)
         await DeviceModel.removeDeviceInfo()
     })
 

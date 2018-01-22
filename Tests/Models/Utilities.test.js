@@ -15,7 +15,7 @@ describe('KeyModel', () => {
     it('getClearBitData()', () => {
         const companyName = 'google.com'
         const companyData = Utilities.getClearBitData(companyData)
-        expect(companyData).toEqual(expect.anything())
+        expect(companyData).not.toEqual(null)
     })
 
 })

@@ -8,9 +8,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
-        environment:
-          CLEAR_BIT_API_KEY: "sk_37a14390bceb532aea4be85ca5e1634e",
-          LOCAL_SERVER_IS_RUNNING: "FALSE"
 
     working_directory: ~/repo
 
@@ -31,6 +28,12 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
         
-      - run: npm test
+      - run: 
+        name: Run Test
+        command: npm test
+        environment:
+          CLEAR_BIT_API_KEY: "sk_37a14390bceb532aea4be85ca5e1634e",
+          LOCAL_SERVER_IS_RUNNING: "FALSE"
+
 
 

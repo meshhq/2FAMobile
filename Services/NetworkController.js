@@ -1,4 +1,4 @@
-const baseURL = 'http://d2fced7e.ngrok.io'
+const baseURL = 'http://localhost:1323'
 
 export default class NetworkController {
 

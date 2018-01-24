@@ -22,16 +22,21 @@
     "start:android": "react-native run-android"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./Tests/setupJest.js"
+    ]
   },
   "dependencies": {
     "buffer": "^5.0.8",
-    "expo": "^23.0.4",
+    "expo": "^25.0.0",
+    "nock": "^9.1.6",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-countdown-circle": "^2.0.0",
     "react-native-navbar": "^2.1.0",
     "react-native-swipeout": "^2.3.3",
-    "react-native-uuid": "^1.4.9"
+    "react-native-uuid": "^1.4.9",
+    "w3c-xmlhttprequest": "^2.1.2"
   }
 }

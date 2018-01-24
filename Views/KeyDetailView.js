@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import CountdownCircle from 'react-native-countdown-circle'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 import KeyModel from '../Models/Key';
 
 export default class KeyDetailView extends React.Component {

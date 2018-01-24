@@ -16,7 +16,7 @@ import KeyListViewCell from './KeyListViewCell'
 import QRScanner from './QRScanner'
 import KeyModel from '../Models/Key'
 import DeviceModel from '../Models/Device'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 
 export default class KeyListView extends React.Component {
 

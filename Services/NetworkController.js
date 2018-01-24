@@ -68,10 +68,10 @@ export default class NetworkController {
     /**
      * A `PUT` method to update a key with the given data in the 
      * Request body.
+     * @param {object} updateData
      * @param {object} keyData
-     * @param {string} deviceId
      */
-    static async updateKey(keyData) {
+    static async updateKey(updateData, keyData) {
         const url = `${baseURL}/keys/${keyData.ID}`
         return await fetch(url, {
             method: 'PUT',
@@ -80,7 +80,7 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                key: keyData.key
+                key: updateData.key
             })
         })
         .then((response) => {

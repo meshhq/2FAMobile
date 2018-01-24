@@ -10,9 +10,9 @@ jobs:
       - image: circleci/node:7.10
 
     environment:
-        CLEAR_BIT_API_KEY: "sk_37a14390bceb532aea4be85ca5e1634e",
-        LOCAL_SERVER_IS_RUNNING: "FALSE"
-        
+      - CLEAR_BIT_API_KEY: "sk_37a14390bceb532aea4be85ca5e1634e",
+      - LOCAL_SERVER_IS_RUNNING: "FALSE"
+
     working_directory: ~/repo
 
     steps:

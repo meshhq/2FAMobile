@@ -85,7 +85,7 @@ export default class KeyListView extends React.Component {
      * Will handle the local and remote delete calls then execute 
      * a table reload when a 'swipe to delete' is executed.
      */
-    deleteHandler = (keyId) => {
+    deleteHandler = (success) => {
         return this.refreshData()
     }
 

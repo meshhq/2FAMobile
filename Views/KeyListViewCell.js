@@ -32,11 +32,12 @@ export default class KeyListViewCell extends React.PureComponent {
     deleteRow = () => {
         return NetworkController.deleteKey(this.props.keyData.id)
             .then((response) => {
-                return KeyModel.deleteKey(response.id)
+                console.log('DELETE RESPOSNE: ', response)
+                return KeyModel.deleteKey(this.props.keyData.id)
             })
             .then(() => {
                 // This is passed through from the KeyListView
-                this.props.deleteHandler(this.props.key.id)
+                this.props.deleteHandler()
             })
     }
 

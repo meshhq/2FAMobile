@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:1323'
+const baseURL = 'http://d2fced7e.ngrok.io'
 
 export default class NetworkController {
 
@@ -27,7 +27,7 @@ export default class NetworkController {
      * @param {object} QRData
      */
     static async createKey(device, QRData) {
-        return await fetch(baseURL + '/keys', {
+        return fetch(baseURL + '/keys', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -38,6 +38,9 @@ export default class NetworkController {
                 key: QRData.secret,
                 provider: QRData.issuer
             })
+        })
+        .then((response) => {
+            return response.json()
         })
         .catch((error) => {
             console.log('Create Key Error: ', error)
@@ -73,12 +76,15 @@ export default class NetworkController {
      */
     static async deleteKey(keyId) {
         const url = `${baseURL}/keys/${keyId}`
-        return await fetch(url, {
+        return fetch(url, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
+        })
+        .then((response) => {
+            return response.json()
         })
         .catch((error) => {
             console.log('Delete Key Error: ', error)

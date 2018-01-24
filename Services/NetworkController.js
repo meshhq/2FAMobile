@@ -15,6 +15,9 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             }  
         })
+        .then((response) => {
+            return response.json()
+        })
         .catch((error) => {
             console.log('Get Keys Error: ', error)
         })
@@ -47,13 +50,28 @@ export default class NetworkController {
         })
     }
 
+    static async crush(device, QRData) {
+        return await fetch('https://jsonplaceholder.typicode.com' + '/posts/1', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Create Key Error: ', error)
+        })
+    }
     /**
      * A `PUT` method to update a key with the given data in the 
      * Request body.
+     * @param {object} updateData
      * @param {object} keyData
-     * @param {string} deviceId
      */
-    static async updateKey(keyData) {
+    static async updateKey(updateData, keyData) {
         const url = `${baseURL}/keys/${keyData.ID}`
         return await fetch(url, {
             method: 'PUT',
@@ -62,8 +80,11 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                key: keyData.key
+                key: updateData.key
             })
+        })
+        .then((response) => {
+            return response.json()
         })
         .catch((error) => {
             console.log('Update Key Error: ', error)

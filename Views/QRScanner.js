@@ -7,7 +7,7 @@ import {
     Alert
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 import DeviceModel from '../Models/Device'
 import KeyModel from '../Models/Key'
 import Utilities from '../Utilities'

@@ -8,7 +8,7 @@ import {
     Text
 } from 'react-native'
 import PropTypes from 'prop-types'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 import KeyDetailView from './KeyDetailView'
 import Swipeout from 'react-native-swipeout'
 import KeyModel from '../Models/Key';

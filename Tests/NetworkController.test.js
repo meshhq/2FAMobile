@@ -13,7 +13,9 @@ import { LOCAL_SERVER_IS_RUNNING } from 'react-native-dotenv'
 const UUID = require('react-native-uuid')
 var nock = require('nock');
 
-if (LOCAL_SERVER_IS_RUNNING === 'FALSE') {
+let local = LOCAL_SERVER_IS_RUNNING
+
+if (local === 'FALSE') {
     let scope = nock('http://localhost:1323')
     .post('/keys').reply(200, createKeyResponse())
     .put('/keys/1').reply(200, updateKeyResponse())

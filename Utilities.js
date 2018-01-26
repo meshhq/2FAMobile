@@ -1,6 +1,3 @@
-
-import { CLEAR_BIT_API_KEY } from 'react-native-dotenv'
-
 export default class Utilities {
     /**
      * Will format the scan date to 'XX/XX/XXXX' and return it as a string.

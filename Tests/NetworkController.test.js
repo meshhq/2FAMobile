@@ -1,5 +1,7 @@
 import NetworkController from '../Services/NetworkController'
 import Utilities from '../Utilities'
+import constants from '../utils/constants'
+const UUID = require('react-native-uuid')
 
 import {
     createKeyResponse,
@@ -8,14 +10,9 @@ import {
     deleteKeysResponse
 } from './MockResponses'
 
-import { LOCAL_SERVER_IS_RUNNING } from 'react-native-dotenv'
 
-const UUID = require('react-native-uuid')
-var nock = require('nock');
-
-let local = LOCAL_SERVER_IS_RUNNING
-
-if (local === 'FALSE') {
+if (constants.LOCAL_SERVER_IS_RUNNING === 'FALSE') {
+    var nock = require('nock');
     let scope = nock('http://localhost:1323')
     .post('/keys').reply(200, createKeyResponse())
     .put('/keys/1').reply(200, updateKeyResponse())

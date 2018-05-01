@@ -1,4 +1,4 @@
-import KeyModel from './Key'
+import KeyModel from '../../Models/Key'
 
 import MockStorage from '../MockStorage'
 
@@ -26,24 +26,24 @@ describe('KeyModel', () => {
         const dummyKey = createDummyKey()
         await KeyModel.addOrUpdateKey(dummyKey)
         const key = await KeyModel.getKeyWithId(keyId)
-        expect(key).toEqual(expect.anything())
+        expect(key).not.toEqual(null)
         expect(key.id).toEqual(keyId)
     })
     
     it('getKeyWithId()', async () => {
         const key = await KeyModel.getKeyWithId(keyId)
-        expect(key).toEqual(expect.anything())
+        expect(key).not.toEqual(null)
         expect(key.target).toEqual(testTargetOne)
     })
 
     it('getAllKeyIds()', async () => {
         const key = await KeyModel.getAllKeyIds()
-        expect(key).toEqual(expect.anything())
+        expect(key).not.toEqual(null)
     })
 
     it('getAllKeyData()', async () => {
         const keys = await KeyModel.getAllKeyData()
-        expect(keys).toEqual(expect.anything())
+        expect(keys).not.toEqual(null)
     })
 
     // Update existing key
@@ -52,7 +52,7 @@ describe('KeyModel', () => {
         dummyKey.target = testTargetTwo
         await KeyModel.addOrUpdateKey(dummyKey)
         const key = await KeyModel.getKeyWithId(keyId)
-        expect(key).toEqual(expect.anything())
+        expect(key).not.toEqual(null)
         expect(key.target).toEqual(testTargetTwo)
     })
 

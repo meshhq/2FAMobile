@@ -37,4 +37,17 @@ export default class Utilities {
         }
         return decodeURIComponent(results[2].replace(/\+/g, " "))
     }
+
+    /**
+     * This will hit the ClearBit API to get more info on the
+     * company domain provided.
+     * @param {string} companyDomain
+     */
+    static getClearBitData = async (companyDomain) => {
+        const Company = clearBit.Company
+        return await Company.find({domain: companyDomain})
+            .catch((err) => {
+                console.error(err)
+            })
+    }
 }

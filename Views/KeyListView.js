@@ -16,7 +16,7 @@ import KeyListViewCell from './KeyListViewCell'
 import QRScanner from './QRScanner'
 import KeyModel from '../Models/Key'
 import DeviceModel from '../Models/Device'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 
 export default class KeyListView extends React.Component {
 
@@ -85,7 +85,7 @@ export default class KeyListView extends React.Component {
      * Will handle the local and remote delete calls then execute 
      * a table reload when a 'swipe to delete' is executed.
      */
-    deleteHandler = (keyId) => {
+    deleteHandler = (success) => {
         return this.refreshData()
     }
 
@@ -103,26 +103,40 @@ export default class KeyListView extends React.Component {
                 </View>
             )
         } else {
-            return (
-                <View style={ styles.container }>
-                    <NavigationBar 
-                        title={ this.titleConfig }
-                        rightButton={ this.rightBarButtonConfig }
-                    />
-                    <FlatList
-                        data={ this.state.data }
-                        renderItem={({item}) => <KeyListViewCell 
-                                                    keyData={item} 
-                                                    navigator={this.props.navigator} 
-                                                    deleteHandler={this.deleteHandler}
-                                                />}
-                        keyExtractor={(item, index) => index}
-                        refreshing= { this.state.refreshing }
-                        onRefresh={ this.refreshData }
-                        ItemSeparatorComponent={this.renderSeparator}
-                    />
-                </View>
-            )
+            if (!this.state.data || this.state.data.length === 0) {
+                return (
+                    <View style={ styles.container }>
+                        <NavigationBar 
+                            title={ this.titleConfig }
+                            rightButton={ this.rightBarButtonConfig }
+                        />
+                        <View style={ styles.noAccountsContainer }>
+                            <Text style={ styles.noAccountsLabel }>No keys found.</Text>
+                        </View>
+                    </View>
+                )
+            } else {
+                return (
+                    <View style={ styles.container }>
+                        <NavigationBar 
+                            title={ this.titleConfig }
+                            rightButton={ this.rightBarButtonConfig }
+                        />
+                        <FlatList
+                            data={ this.state.data }
+                            renderItem={({item}) => <KeyListViewCell 
+                                                        keyData={item} 
+                                                        navigator={this.props.navigator} 
+                                                        deleteHandler={this.deleteHandler}
+                                                    />}
+                            keyExtractor={(item, index) => index}
+                            refreshing= { this.state.refreshing }
+                            onRefresh={ this.refreshData }
+                            ItemSeparatorComponent={this.renderSeparator}
+                        />
+                    </View>
+                )
+            }
         }
     }
 
@@ -141,6 +155,16 @@ const styles = StyleSheet.create({
     spinnerContainer: {
         flex: 1,
         justifyContent: 'center'
+    },
+    noAccountsContainer: {
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    noAccountsLabel: {
+        flex: 1,
+        color: '#63acff',
+        fontSize: 28
     },
     flatList: {
         margin: 8

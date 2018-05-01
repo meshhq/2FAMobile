@@ -1,4 +1,4 @@
-const baseURL = 'localhost:8080'
+const baseURL = 'http://localhost:1323'
 
 export default class NetworkController {
 
@@ -8,7 +8,7 @@ export default class NetworkController {
      */
     static async getKeys(userId) {
         const url = `${baseURL}/keys?user_id=${userId}`
-        return fetch(url, {
+        return await fetch(url, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -16,7 +16,10 @@ export default class NetworkController {
             }  
         })
         .then((response) => {
-            return response
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Get Keys Error: ', error)
         })
     }
 
@@ -24,8 +27,9 @@ export default class NetworkController {
      * A `POST` method to create a new key with the given body 
      * for the current device.
      * @param {object} device
+     * @param {object} QRData
      */
-    static async createKey(device) {
+    static async createKey(device, QRData) {
         return fetch(baseURL + '/keys', {
             method: 'POST',
             headers: {
@@ -33,37 +37,57 @@ export default class NetworkController {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                deviceId: device.uuid,
-                key: '',
-                provider: ''
+                user_id: device.uuid,
+                key: QRData.secret,
+                provider: QRData.issuer
             })
         })
         .then((response) => {
-            return response
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Create Key Error: ', error)
         })
     }
 
+    static async crush(device, QRData) {
+        return await fetch('https://jsonplaceholder.typicode.com' + '/posts/1', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Create Key Error: ', error)
+        })
+    }
     /**
      * A `PUT` method to update a key with the given data in the 
      * Request body.
-     * @param {string} keyId 
+     * @param {object} updateData
+     * @param {object} keyData
      */
-    static async updateKey(keyId) {
-        const url = `${baseURL}/keys/${keyId}`
-        return fetch(url, {
+    static async updateKey(updateData, keyData) {
+        const url = `${baseURL}/keys/${keyData.ID}`
+        return await fetch(url, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                deviceId: uuid,
-                key: '',
-                provider: ''
+                key: updateData.key
             })
         })
         .then((response) => {
-            return response
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Update Key Error: ', error)
         })
     }
 
@@ -81,7 +105,10 @@ export default class NetworkController {
             }
         })
         .then((response) => {
-            return response
+            return response.json()
+        })
+        .catch((error) => {
+            console.log('Delete Key Error: ', error)
         })
     }
 

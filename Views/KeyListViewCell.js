@@ -8,7 +8,7 @@ import {
     Text
 } from 'react-native'
 import PropTypes from 'prop-types'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 import KeyDetailView from './KeyDetailView'
 import Swipeout from 'react-native-swipeout'
 import KeyModel from '../Models/Key';
@@ -30,14 +30,15 @@ export default class KeyListViewCell extends React.PureComponent {
      * Action taken when the swipe to delete button is pressed.
      */
     deleteRow = () => {
-        // return NetworkController.deleteKey(this.props.key.data)
-        //     .then((response) => {
-        //         return KeyModel.deleteKey(response.id)
-        //     })
-        //     .then(() => {
-        //         // This is passed through from the KeyListView
-        //         this.props.deleteHandler(this.props.key.id)
-        //     })
+        return NetworkController.deleteKey(this.props.keyData.id)
+            .then((response) => {
+                console.log('DELETE RESPOSNE: ', response)
+                return KeyModel.deleteKey(this.props.keyData.id)
+            })
+            .then(() => {
+                // This is passed through from the KeyListView
+                this.props.deleteHandler()
+            })
     }
 
     render() {

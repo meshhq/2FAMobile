@@ -1,17 +1,17 @@
 import React from 'react'
-import KeyListView from './KeyListView'
+import KeyDetailView from '../../Views/KeyDetailView'
 
 import renderer from 'react-test-renderer'
 
 it('renders without crashing', () => {
-  const rendered = renderer.create(<KeyListView data={dummyKey}/>).toJSON()
+  const rendered = renderer.create(<KeyDetailView keyData={dummyKey} />).toJSON()
   expect(rendered).toBeTruthy()
 })
 
-const dummyKey = [{ 
+const dummyKey = { 
   id: '1',
   date: '00/00/0000',
   data: 'localhost:3000',
   target: 'testTarget',
   type: 'testType'
-}]
+}

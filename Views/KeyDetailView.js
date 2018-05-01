@@ -7,23 +7,23 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import CountdownCircle from 'react-native-countdown-circle'
-import NetworkController from '../NetworkController'
+import NetworkController from '../Services/NetworkController'
 import KeyModel from '../Models/Key';
 
 export default class KeyDetailView extends React.Component {
 
     state = {
-        currentToken: ''
+        currentToken: 'No Token Found'
     }
 
     /**
      * Will refresh token in componentWillMount
      */
     async componentWillMount() {
-        // const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
-        // this.setState({
-        //     currentToken: token
-        // })
+        const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
+        this.setState({
+            currentToken: token
+        })
     }
 
     /**
@@ -31,19 +31,19 @@ export default class KeyDetailView extends React.Component {
      * fetch a new key from the server and restart the timer.
      */
     timerElapsed = () => {
-        // const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
-        // this.setState({
-        //     currentToken: token
-        // })
+        const token = Utilities.generateTokenFromSecret(this.props.keyData.secret)
+        this.setState({
+            currentToken: token
+        })
         // Need to fetch and store new Key information.
-        // return NetworkController.updateKey(this.props.key.data)
-        //     .then((updatedKey) => {
-        //         return KeyModel.addOrUpdateKey(updatedKey)
-        //     })
-        //     .then(() => {
-        //         const refresh = this.state.numberOfRefresh + 1
-        //         this.setState({ numberOfRefresh: refresh })
-        //     })
+        return NetworkController.updateKey(this.props.key.data)
+            .then((updatedKey) => {
+                return KeyModel.addOrUpdateKey(updatedKey)
+            })
+            .then(() => {
+                const refresh = this.state.numberOfRefresh + 1
+                this.setState({ numberOfRefresh: refresh })
+            })
     }
 
     render() {

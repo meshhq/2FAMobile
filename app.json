@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "sdkVersion": "26.0.0"
+  },
+  "infoPlist": {
+    "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
+    "NSAllowsArbitraryLoads": true
+  }
+}

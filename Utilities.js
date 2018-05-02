@@ -1,6 +1,6 @@
 import OTP from 'otp-client'
 
-const CLEAR_BIT_API_KEY = 'sk_37a14390bceb532aea4be85ca5e1634e'
+import { CLEAR_BIT_API_KEY } from 'react-native-dotenv'
 
 export default class Utilities {
 	
@@ -61,9 +61,9 @@ export default class Utilities {
 	 * This will also reset the 30 second timer.
 	 */
 	static generateTokenFromSecret = (secret) => {
+		console.log('Updating code for: ', secret)
 		const otp = new OTP(secret)
 		const newToken = otp.getToken()
-		// console.log('New: ', newToken)
 		return newToken
 	}
 

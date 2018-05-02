@@ -20,7 +20,8 @@ export default class KeyListView extends React.Component {
 	state = {
 		isLoading: true,
 		refreshing: false, 
-		data: []
+		data: [],
+		timeLeft: 0
   }
   
   /**
@@ -30,16 +31,37 @@ export default class KeyListView extends React.Component {
 		try {
 			await Device.getDeviceInfo()
 			await this.refreshData()
+			this.counter()
 		} catch (error) {
 			console.log('Key List View Will Mount Error: ', error)
 		}
+	}
+	
+	componentWillUnmount() {
+		clearTimeout(this.state.timeoutId)
+	}
+	
+	counter = () => {
+		const timeoutId = setTimeout(this.updateTime, 1000)
+		this.setState({
+			timeoutId: timeoutId
+		})
   }
-  
+
+  updateTime = async () => {
+		const theDate = new Date()
+		// console.log('Main Tick ', theDate.getSeconds())
+    if (theDate.getSeconds() === 0) {
+			await Key.updateAllCodes()
+			await this.refreshData()
+		}
+		return this.counter()
+	}
+
   /**
 	 * Will retrieve all the Keys from the local store and refresh the table.
 	 */
 	refreshData = async () => {
-		console.log('Refreshing?')
 		try {
 			const allKeyData = await Key.getAllKeyData()
 			return this.setState({
@@ -50,7 +72,12 @@ export default class KeyListView extends React.Component {
 			console.log('Error: ', error)
 		}
   }
-  
+	
+	updateCodes = async () => {
+		await Key.updateAllCodes()
+		await this.refreshData()
+	}
+
   /**
 	 * Create the view used as a separator.
 	 */
@@ -98,7 +125,8 @@ export default class KeyListView extends React.Component {
               renderItem={({item}) => <KeyListViewCell 
                             keyData={item} 
                             navigation={this.props.navigation} 
-                            deleteHandler={this.deleteHandler}
+														deleteHandler={this.deleteHandler}
+														updateHandler={this.updateCodes}
                           />}
               keyExtractor={(item, index) => item.key}
               refreshing= { this.state.refreshing }

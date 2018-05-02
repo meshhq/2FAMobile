@@ -33,9 +33,8 @@ export default class KeyListViewCell extends React.Component {
 			})
 	}
 
-	updateCode = (newCode) => {
-		this.props.keyData.code = newCode
-		this.setState({})
+	updateCode = async (newCode) => {
+		return this.props.updateHandler()
 	}
 
 	render() {

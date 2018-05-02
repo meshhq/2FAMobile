@@ -23,7 +23,6 @@ export default class KeyDetailView extends React.Component {
 		const params = this.props.navigation.state.params
 		const keyData = params.keyData
 		const updateCode = params.updateCode
-		const token = Utilities.generateTokenFromSecret(keyData)
 		this.setState({
 			keyData: keyData,
 			updateCode: updateCode
@@ -52,7 +51,7 @@ export default class KeyDetailView extends React.Component {
 	 */
 	cellForItem = (item) => {
 		return (
-			<KeyDetailCell keyData={ item.item } updateCode={ this.state.updateCode }/>
+			<KeyDetailCell keyId={ item.item.ID } updateCode={ this.state.updateCode }/>
 		)
 	}
 

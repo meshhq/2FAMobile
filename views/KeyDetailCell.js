@@ -17,16 +17,20 @@ import Key from '../models/Key'
 export default class KeyDetailCell extends React.Component {
 
 	state = {
-    currentToken: 'No Token Found',
 		timeLeft: 30,
-		update: false,
-		timeoutId: ''
+		timeoutId: '',
+		keyData: null
 	}
 
 	/**
 	 * Will refresh token in componentWillMount
 	 */
 	async componentWillMount() {
+		const keyData = await Key.getKeyWithId(this.props.keyId)
+		this.setState({
+			timeLeft: this.getTimeLeft(),
+			keyData: keyData
+		})
     this.counter()
 	}
 
@@ -53,6 +57,7 @@ export default class KeyDetailCell extends React.Component {
 	 * Will update the time on the counter.
 	 */
   updateTime = () => {
+		// console.log('Detail Tick ', this.state.timeLeft)
 		const time = this.state.timeLeft - 1
 		if (time < 0) {
 			this.updateCode()
@@ -68,18 +73,26 @@ export default class KeyDetailCell extends React.Component {
 	 * fetch a new key from the server and restart the timer.
 	 */
 	updateCode = async () => {
-		const currentKey = this.props.keyData
-		const newCode = Utilities.generateTokenFromSecret(currentKey.key)
-		this.props.keyData.code = newCode
-		return Key.addOrUpdateKey(currentKey).then(() => {
-			const refresh = this.state.numberOfRefresh + 1
-			this.setState({ numberOfRefresh: refresh })
-			this.props.updateCode(newCode)
+		await this.props.updateCode()
+		const updatedKey = await Key.getKeyWithId(this.props.keyId)
+		this.setState({
+			keyData: updatedKey
 		})
 	}
 
+	getTimeLeft = () => {
+		const theDate = new Date()
+		if (theDate.getSeconds() > 30) {
+			return 60 - theDate.getSeconds()
+		} else if (theDate.getSeconds() < 30) {
+			return 30 - theDate.getSeconds()
+		} else {
+			return 30
+		}
+	}
+
 	render() {
-		if (!this.props.keyData) {
+		if (!this.state.keyData) {
 			return (
 				<View />
 			)
@@ -94,7 +107,7 @@ export default class KeyDetailCell extends React.Component {
 					<View style={ styles.tokenContainer }>
 						<Text style={ styles.tokenTitle }>YOUR TOKEN IS:</Text>
 						<View style={ styles.tokenValueContainer }>
-							<Text style={ styles.tokenValue }>{ this.props.keyData.code }</Text>
+							<Text style={ styles.tokenValue }>{ this.state.keyData.code }</Text>
 						</View>
 					</View>
 					<View style={ styles.timerContainer }>
@@ -108,7 +121,7 @@ export default class KeyDetailCell extends React.Component {
 					</View>
 					<View style={ styles.bottomContainer }>
 						<View style={ styles.tokenIdContainer }>
-							<Text style={ styles.expireLabel }>TOKEN ID: { this.props.keyData.ID }</Text>
+							<Text style={ styles.expireLabel }>TOKEN ID: { this.state.keyData.ID }</Text>
 						</View>
 						<View>
 							<TouchableOpacity onPress={ this.copyToClipboard }>
@@ -124,7 +137,7 @@ export default class KeyDetailCell extends React.Component {
 	}
 
 	copyToClipboard = () => {
-		Clipboard.setString(this.props.keyData.code)
+		Clipboard.setString(this.state.keyData.code)
 	}
 
 }

@@ -39,20 +39,16 @@ export default class KeyListView extends React.Component {
 	 * Will retrieve all the Keys from the local store and refresh the table.
 	 */
 	refreshData = async () => {
-		const keyData = await Key.getDummyKeyData()
-		return this.setState({
-					isLoading: false,
-					data: keyData
-				})
-		// try {
-		// 	const allKeyData = await Key.getAllKeyData()
-		// 	return this.setState({
-		// 		isLoading: false,
-		// 		data: allKeyData
-		// 	})
-		// } catch (error) {
-		// 	console.log('Error: ', error)
-		// }
+		console.log('Refreshing?')
+		try {
+			const allKeyData = await Key.getAllKeyData()
+			return this.setState({
+				isLoading: false,
+				data: allKeyData
+			})
+		} catch (error) {
+			console.log('Error: ', error)
+		}
   }
   
   /**

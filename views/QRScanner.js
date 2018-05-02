@@ -1,4 +1,7 @@
 import React from 'react'
+import Key from '../models/Key'
+import Device from '../models/Device'
+import Utilities from '../Utilities'
 import {
   Text, 
   View, 
@@ -52,7 +55,65 @@ export default class QRScanner extends React.Component {
         </View>
       )
     }
-  }
+	}
+	
+	/**
+	 * Will handle the QR Key payload after a scan occurs 
+	 */
+	handleQRCodeResult = (result) => {
+		if (this.state.alertShowing === false) {
+			Device.getDeviceInfo()
+				.then((deviceInfo) => {
+					const keyData = this.createKeyData(result.data)
+					return Key.addOrUpdateKey(keyData)
+				})
+				.then(() => {
+					this.showAlert('Scan Success!', 'View your key on the home screen')
+				})    
+		}
+	}
+
+	/**
+	 * Will handle the Response sent back from the server
+	 * and save it to the local store.
+	 */
+	handleKeysResponse = (response) => {
+		// TODO: Need to confirm this response has everything we need
+		return KeyModel.addOrUpdateKey(response)
+	}
+
+	/**
+	 * Will show an alert message over the camera view.
+	 */
+	showAlert = (title, message) => {
+		Alert.alert(title, message, [{text: 'Dismiss', onPress: this.alertWasDismissed}])
+		this.setState({ alertShowing: true })
+	}
+
+	/**
+	 * Set the state to indicate that we're ready for another scan.
+	 */
+	alertWasDismissed = () => {
+		this.setState({ alertShowing: false })
+	}
+
+	/**
+	 * Parse the QR Code URI for the secret and issuer. Then
+	 * we'll build the object that will be sent to the server.
+	 * @param {string} dataURI
+	 */
+	createKeyData = (dataURI) => {
+		const date = Utilities.getCurrentFormattedDate()
+		const issuer = Utilities.getParameterByName('issuer', dataURI)
+		const secret = Utilities.getParameterByName('secret', dataURI)
+		return {
+			ID: Math.random.toString(),
+			date: date,
+			issuer: issuer,
+			secret: secret,
+			key: '123456789987654321'
+		}
+	}
 
 }
 

@@ -1,55 +1,81 @@
 const CLEAR_BIT_API_KEY = 'sk_37a14390bceb532aea4be85ca5e1634e'
 
 export default class Utilities {
-    /**
-     * Will format the scan date to 'XX/XX/XXXX' and return it as a string.
-     */
-    static getCurrentFormattedDate = () => {
-        const today = new Date()
-        let dd = today.getDate()
-        let mm = today.getMonth() + 1 // January is 0
-        const yyyy = today.getFullYear()
+	
+	/**
+	 * Will format the scan date to 'XX/XX/XXXX' and return it as a string.
+	 */
+	static getCurrentFormattedDate = () => {
+		const today = new Date()
+		let dd = today.getDate()
+		let mm = today.getMonth() + 1 // January is 0
+		const yyyy = today.getFullYear()
 
-        if (dd < 10) {
-            dd = '0' + dd
-        }
+		if (dd < 10) {
+			dd = '0' + dd
+		}
 
-        if (mm < 10) {
-            mm = '0' + mm
-        } 
+		if (mm < 10) {
+			mm = '0' + mm
+		} 
 
-        return mm + '/' + dd + '/' + yyyy
-    }
+		return mm + '/' + dd + '/' + yyyy
+	}
 
-    /**
-     * Will strip out the value for a given name from 
-     * the given url.
-     * @param {string} name
-     * @param {string} url
-     */
-    static getParameterByName = (name, url) => {
-        name = name.replace(/[\[\]]/g, "\\$&")
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url)
-        if (!results) {
-            return null
-        }
-        if (!results[2]) { 
-            return ''
-        }
-        return decodeURIComponent(results[2].replace(/\+/g, " "))
-    }
+	/**
+	 * Will strip out the value for a given name from 
+	 * the given url.
+	 * @param {string} name
+	 * @param {string} url
+	 */
+	static getParameterByName = (name, url) => {
+		name = name.replace(/[\[\]]/g, "\\$&")
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url)
+		if (!results) {
+			return null
+		}
+		if (!results[2]) { 
+			return ''
+		}
+		return decodeURIComponent(results[2].replace(/\+/g, " "))
+	}
 
-    /**
-     * This will hit the ClearBit API to get more info on the
-     * company domain provided.
-     * @param {string} companyDomain
-     */
-    static getClearBitData = async (companyDomain) => {
-        const Company = clearBit.Company
-        return await Company.find({domain: companyDomain})
-            .catch((err) => {
-                console.error(err)
-            })
-    }
+	/**
+	 * This will hit the ClearBit API to get more info on the
+	 * company domain provided.
+	 * @param {string} companyDomain
+	 */
+	static getClearBitData = async (companyDomain) => {
+		const Company = clearBit.Company
+		return await Company.find({domain: companyDomain})
+			.catch((err) => {
+					console.error(err)
+			})
+	}
+
+	/**
+	 * Take the current secret and generate a new token.
+	 * This will also reset the 30 second timer.
+	 */
+	static generateTokenFromSecret = (secret) => {
+		const random = Utilities.getRandomInt(3)
+		switch (random) {
+			case 0:
+				return '3495876'
+			case 1:
+				return '6854236'
+			case 2:
+				return '9785421'
+			case 3:
+			default:
+				return '2235984'
+		}
+	}
+
+	// REMOVE IN PROD
+	static getRandomInt(max) {
+		return Math.floor(Math.random() * Math.floor(max));
+	}
+
 }

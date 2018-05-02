@@ -16,7 +16,7 @@ export default class KeyListViewCell extends React.Component {
 	 * from the cell pressed.
 	 */
 	cellPressed = () => {
-		this.props.navigation.navigate('Detail', { keyData: this.props.keyData })
+		this.props.navigation.navigate('Detail', { updateCode: this.updateCode, keyData: this.props.keyData })
 	}
 
 	/**
@@ -25,12 +25,17 @@ export default class KeyListViewCell extends React.Component {
 	deleteRow = () => {
 		return NetworkService.deleteKey(this.props.keyData.id)
 			.then((response) => {
-				return KeyModel.deleteKey(this.props.keyData.id)
+				return Key.deleteKey(this.props.keyData.id)
 			})
 			.then(() => {
 				// This is passed through from the KeyListView
 				this.props.deleteHandler()
 			})
+	}
+
+	updateCode = (newCode) => {
+		this.props.keyData.code = newCode
+		this.setState({})
 	}
 
 	render() {

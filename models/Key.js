@@ -1,41 +1,29 @@
 import { AsyncStorage } from 'react-native'
 
-const keyIds = 'keyIds'
+const allKeyData = 'allKeyData'
 
 import { getKeysResponse } from '../tests/MockResponses'
-const dummyKeyId = 'dummyKeyIds'
 
 export default class Key {
 
 	static async getDummyKeyData() {
-		let dummyString = await AsyncStorage.getItem(dummyKeyId)
+		let dummyString = await AsyncStorage.getItem(allKeyData)
 		if (!dummyString) {
 			const keyData = getKeysResponse()
-			await AsyncStorage.setItem(dummyKeyId, JSON.stringify(keyData.data))
-			dummyString = await AsyncStorage.getItem(dummyKeyId)
+			await AsyncStorage.setItem(allKeyData, JSON.stringify(keyData.data))
+			dummyString = await AsyncStorage.getItem(allKeyData)
 		}
 		return JSON.parse(dummyString)
 	}
 
 	/**
-	 * Will create or update an existing key with new data.
+	 * Will create a new key.
 	 * @param {object} KeyData 
 	 */
 	static async addOrUpdateKey(keyData) {
-		const IDs = await Key.getAllKeyIds()
-		let idArray = []
-		if (IDs) {
-				idArray = IDs
-		} else {
-				idArray = []
-		}
-		if (!idArray.includes(keyData.id)) {
-				idArray.push(keyData.id)
-		}
-		const idString = JSON.stringify(idArray)
-		await AsyncStorage.setItem(keyIds, idString)
-		const dataString = JSON.stringify(keyData)
-		return AsyncStorage.setItem(keyData.id, dataString)
+		const allData = await Key.getAllKeyData()
+		allData.push(keyData)
+		await AsyncStorage.setItem(allKeyData, JSON.stringify(allData))
 	}
 
 	/**
@@ -43,48 +31,26 @@ export default class Key {
 	 * @param {string} keyId
 	 */
 	static async getKeyWithId(keyId) {
-		const keyString = await AsyncStorage.getItem(keyId)
-		return JSON.parse(keyString)
-	}
-
-	/**
-	 * Get all the Ids for keys that have been created.
-	 */
-	static async getAllKeyIds() {
-		const allKeyIds = await AsyncStorage.getItem(keyIds)
-		if (!allKeyIds) {
-			// Back out if we don't have any Ids
-			return null
+		const allData = await AsyncStorage.getItem(allKeyData)
+		for (const key of JSON.parse(allData)) {
+			if (key.ID === keyId) {
+				return key
+			}
 		}
-		return JSON.parse(allKeyIds)
+		return null
 	}
 
 	/**
-	 * Get all the key data for the Ids stored.
+	 * Get all the key data.
 	 */
 	static async getAllKeyData() {
-		// Fetch the array of all the key Ids.
-		const IDs = await Key.getAllKeyIds()
-		if (!IDs) {
+		const data = await AsyncStorage.getItem(allKeyData)
+		if (!data) {
 			// Back out if we don't have any Ids.
-			return null
+			// TODO: Need to Change to NULL
+			return Key.getDummyKeyData()
 		}
-
-		// If only one key exists this will be false and we can't call '.forEach'
-		const isArray = Array.isArray(IDs)
-		if (!isArray) {
-			return [IDs]
-		}
-
-		const allKeyPromises = []
-		IDs.forEach(keyId => {
-			// Fetch key data for each stored Id.
-			const keyPromise = Key.getKeyWithId(keyId)
-			allKeyPromises.push(keyPromise)
-		});
-
-		// Return all the keyData promises.
-		return Promise.all(allKeyPromises)
+		return JSON.parse(data)
 	}
 
 	/**
@@ -93,35 +59,16 @@ export default class Key {
 	 * @param {string} keyId 
 	 */
 	static async deleteKey(keyId) {
-		return Key.deleteKeyId(keyId)
-			.then(() => {
-				return AsyncStorage.removeItem(keyId)
-			})
-	}
-
-	/**
-	 * Remove a single keyID from the ID array.
-	 * @param {string} keyId 
-	 */
-	static async deleteKeyId(keyId) {
-		const IDs = await Key.getAllKeyIds()
-		if (IDs == keyId) {
-			return AsyncStorage.removeItem(keyIds)
-		}
-		let foundIndex
-		for (let index = 0; index < IDs.length; index++) {
-			const element = IDs[index]
-			if (element.id === keyId) {
-				foundIndex = index
+		const allData = await AsyncStorage.getItem(allKeyData)
+		const parsedData = JSON.parse(allData)
+		for (let index = 0; index < parsedData.length; index++) {
+			const element = parsedData[index]
+			if (element.ID === keyId) {
+				parsedData.splice(index, 1)
 				break
 			}
 		}
-		if (foundIndex) {
-			IDs.splice(foundIndex, 1)
-		}
-
-		const idString = JSON.stringify(IDs)
-		return AsyncStorage.setItem(keyIds, idString)
+		return await AsyncStorage.setItem(allKeyData, JSON.stringify(parsedData))
 	}
 
 	/**

@@ -5,8 +5,10 @@ import {
     StyleSheet, 
 		Dimensions,
 		TouchableOpacity,
-    Text
+		Text,
+		Clipboard
 } from 'react-native'
+import TimerMixin from 'react-timer-mixin'
 import Utilities from '../Utilities'
 import PropTypes from 'prop-types'
 import NetworkService from '../services/NetworkService'
@@ -16,52 +18,67 @@ export default class KeyDetailCell extends React.Component {
 
 	state = {
     currentToken: 'No Token Found',
-    timeLeft: 30
+		timeLeft: 30,
+		update: false,
+		timeoutId: ''
 	}
 
 	/**
 	 * Will refresh token in componentWillMount
 	 */
 	async componentWillMount() {
-    // const token = Utilities.generateTokenFromSecret(keyData)
     this.counter()
-		this.setState({
-			currentToken: 'dummytoken'
-		})
 	}
 
 	/**
-	 * This function will fire once the 30 second timer is up. It will
-	 * fetch a new key from the server and restart the timer.
+	 * Need to remove the Timeout function so it
+	 * won't fire after the component is unmounted.
 	 */
-	timerElapsed = () => {
-		const token = Utilities.generateTokenFromSecret(this.state.keyData)
-		// Need to fetch and store new Key information.
-		return NetworkService.updateKey(this.props.key.data)
-			.then((updatedKey) => {
-				return KeyModel.addOrUpdateKey(updatedKey)
-			})
-			.then(() => {
-				const refresh = this.state.numberOfRefresh + 1
-				this.setState({ numberOfRefresh: refresh })
-			})
-  }
-  
+	componentWillUnmount() {
+		clearTimeout(this.state.timeoutId)
+	}
+	
+	/**
+	 * This will start the counter and save the setTimeout
+	 * Id so we can clear it when the component unmounts
+	 */
   counter = () => {
-    setTimeout(this.updateTime, 1000)
+		const timeoutId = setTimeout(this.updateTime, 1000)
+		this.setState({
+			timeoutId: timeoutId
+		})
   }
 
+	/**
+	 * Will update the time on the counter.
+	 */
   updateTime = () => {
-    const time = this.state.timeLeft - 1
+		const time = this.state.timeLeft - 1
+		if (time < 0) {
+			this.updateCode()
+		}
     this.setState({
       timeLeft: (time < 0) ? 30 : time
     })
     this.counter()
   }
 
+	/**
+	 * This function will fire once the 30 second timer is up. It will
+	 * fetch a new key from the server and restart the timer.
+	 */
+	updateCode = async () => {
+		const currentKey = this.props.keyData
+		const newCode = Utilities.generateTokenFromSecret(currentKey.key)
+		this.props.keyData.code = newCode
+		return Key.addOrUpdateKey(currentKey).then(() => {
+			const refresh = this.state.numberOfRefresh + 1
+			this.setState({ numberOfRefresh: refresh })
+			this.props.updateCode(newCode)
+		})
+	}
+
 	render() {
-		console.log('? ', this.props.keyData)
-		console.log('? ', this.props.keyData.code)
 		if (!this.props.keyData) {
 			return (
 				<View />
@@ -94,14 +111,20 @@ export default class KeyDetailCell extends React.Component {
 							<Text style={ styles.expireLabel }>TOKEN ID: { this.props.keyData.ID }</Text>
 						</View>
 						<View>
-							<TouchableOpacity>
-								<View style={ styles.copyButton }></View>
+							<TouchableOpacity onPress={ this.copyToClipboard }>
+								<View style={ styles.copyButton }>
+									<Image style={ styles.copyImage } source={ require('../resources/copy_icon.png') }/>
+								</View>
 							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
 			)
 		}
+	}
+
+	copyToClipboard = () => {
+		Clipboard.setString(this.props.keyData.code)
 	}
 
 }
@@ -202,6 +225,13 @@ const styles = StyleSheet.create({
 		width: 60,
 		borderRadius: 30,
 		margin: 16,
+		alignItems: 'center',
+		justifyContent: 'center',
 		backgroundColor: '#35a9fc'
+	},
+	copyImage: {
+		width: 20,
+		height: 20,
+		resizeMode: 'contain'
 	}
 })

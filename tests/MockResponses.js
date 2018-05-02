@@ -33,7 +33,7 @@ export let getKeysResponse = () => {
 		"message": "Success.",
 		"data": [
 			{
-				"ID": 1,
+				"ID": "1",
 				"CreatedAt": "2018-01-22T08:47:59.574354-08:00",
 				"UpdatedAt": "2018-01-22T08:47:59.574354-08:00",
 				"DeletedAt": null,
@@ -43,7 +43,7 @@ export let getKeysResponse = () => {
 				"provider": "Mesh"
 			},
 			{
-				"ID": 2,
+				"ID": "2",
 				"CreatedAt": "2018-01-22T10:40:08.539041-08:00",
 				"UpdatedAt": "2018-01-22T10:40:08.539041-08:00",
 				"DeletedAt": null,

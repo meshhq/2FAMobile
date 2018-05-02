@@ -1,7 +1,8 @@
 import React from 'react'
 import KeyDetailCell from './KeyDetailCell'
 import PropTypes from 'prop-types'
-import { 
+import Utilities from '../Utilities'
+import {
     View, 
     StyleSheet,
 		Dimensions,
@@ -11,8 +12,8 @@ import {
 export default class KeyDetailView extends React.Component {
 
 	state = {
-		currentToken: 'No Token Found',
-		keyData: null
+		keyData: null,
+		updateCode: null
 	}
 
 	/**
@@ -21,10 +22,11 @@ export default class KeyDetailView extends React.Component {
 	async componentWillMount() {
 		const params = this.props.navigation.state.params
 		const keyData = params.keyData
-		// const token = Utilities.generateTokenFromSecret(keyData)
+		const updateCode = params.updateCode
+		const token = Utilities.generateTokenFromSecret(keyData)
 		this.setState({
-			keyData: [keyData],
-			currentToken: 'dummytoken'
+			keyData: keyData,
+			updateCode: updateCode
 		})
 	}
 
@@ -36,7 +38,7 @@ export default class KeyDetailView extends React.Component {
 		} else {
 			return (
 				<View style={ styles.container }>
-					<FlatList data={ this.state.keyData }
+					<FlatList data={ [this.state.keyData] }
 										style={ styles.flatList }
 										renderItem={ this.cellForItem }
 										keyExtractor={ (item) => item.key }/>
@@ -49,9 +51,8 @@ export default class KeyDetailView extends React.Component {
 	 * Will return the appropriate cell for the given item.
 	 */
 	cellForItem = (item) => {
-		console.log('Passing: ', item.item)
 		return (
-			<KeyDetailCell keyData={ item.item }/>
+			<KeyDetailCell keyData={ item.item } updateCode={ this.state.updateCode }/>
 		)
 	}
 

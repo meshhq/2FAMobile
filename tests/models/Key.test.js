@@ -1,6 +1,7 @@
 import Key from '../../models/Key'
 
 import MockStorage from '../MockStorage'
+import Utilities from '../../Utilities';
 
 const storageCache = {}
 const AsyncStorage = new MockStorage(storageCache)
@@ -35,6 +36,16 @@ describe('Key', () => {
 		expect(keys.length).toBeGreaterThanOrEqual(2)
 	})
 
+	it('updateAllCodes()', async () => {
+		const keys = await Key.getAllKeyData()
+		const key = keys[0]
+		const currentCode = key.code
+		await Key.updateAllCodes()
+		const newKeys = await Key.getAllKeyData()
+		const newKey = newKeys[0]
+		expect(currentCode).not.toEqual(newKey.code)
+	})
+
 })
 
 const keyId = '3'
@@ -48,6 +59,7 @@ const createDummyKey = () => {
 		target: testTargetOne,
 		type: 'testType',
 		key: 'a120c2b83a244baaaea4b069fa01caf4',
+		code: '',
 		provider: 'Github',
 		user_id: 'MeshStudio'
 	}

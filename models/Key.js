@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native'
+import Utilities from '../Utilities'
 
 const allKeyData = 'allKeyData'
 
@@ -68,7 +69,19 @@ export default class Key {
 				break
 			}
 		}
-		return await AsyncStorage.setItem(allKeyData, JSON.stringify(parsedData))
+		return AsyncStorage.setItem(allKeyData, JSON.stringify(parsedData))
+	}
+
+	/**
+	 * Update all the codes on launch
+	 */
+	static async updateAllCodes() {
+		const allData = await AsyncStorage.getItem(allKeyData)
+		const parsedData = JSON.parse(allData)
+		for (const key of parsedData) {
+			key.code = Utilities.generateTokenFromSecret(key.key)
+		}
+		return AsyncStorage.setItem(allKeyData, JSON.stringify(parsedData))
 	}
 
 	/**

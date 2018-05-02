@@ -1,3 +1,5 @@
+import OTP from 'otp-client'
+
 const CLEAR_BIT_API_KEY = 'sk_37a14390bceb532aea4be85ca5e1634e'
 
 export default class Utilities {
@@ -59,23 +61,10 @@ export default class Utilities {
 	 * This will also reset the 30 second timer.
 	 */
 	static generateTokenFromSecret = (secret) => {
-		const random = Utilities.getRandomInt(3)
-		switch (random) {
-			case 0:
-				return '3495876'
-			case 1:
-				return '6854236'
-			case 2:
-				return '9785421'
-			case 3:
-			default:
-				return '2235984'
-		}
-	}
-
-	// REMOVE IN PROD
-	static getRandomInt(max) {
-		return Math.floor(Math.random() * Math.floor(max));
+		const otp = new OTP(secret)
+		const newToken = otp.getToken()
+		// console.log('New: ', newToken)
+		return newToken
 	}
 
 }

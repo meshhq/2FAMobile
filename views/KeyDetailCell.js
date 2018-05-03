@@ -6,7 +6,9 @@ import {
 		Dimensions,
 		TouchableOpacity,
 		Text,
-		Clipboard
+		Alert,
+		Clipboard,
+		Platform
 } from 'react-native'
 import TimerMixin from 'react-timer-mixin'
 import Utilities from '../Utilities'
@@ -97,8 +99,9 @@ export default class KeyDetailCell extends React.Component {
 				<View />
 			)
 		} else {
+			const containerStyle = getContainerStyle()
 			return (
-				<View style={ styles.container }>
+				<View style={ containerStyle.container }>
 					<View style={ styles.providerContainer }>
 						<View style={ styles.providerImage }>
               <Image style={ styles.image } source={ require('../resources/test-image.png') }/>
@@ -138,6 +141,9 @@ export default class KeyDetailCell extends React.Component {
 
 	copyToClipboard = () => {
 		Clipboard.setString(this.state.keyData.code)
+		const title = 'Copied to Clipboard'
+		const message = 'You auth code has been copied to your clipboard.'
+		Alert.alert(title, message, [{text: 'OK'}])
 	}
 
 }
@@ -146,12 +152,25 @@ KeyDetailCell.propTypes = {
   keyData: PropTypes.object
 }
 
+const getContainerStyle = () => {
+	if (Platform.OS === 'android') {
+		return StyleSheet.create({
+			container: {
+				width: Dimensions.get('window').width,
+				height: Dimensions.get('window').height - 60
+			}
+		})
+	} else {
+		return StyleSheet.create({
+			container: {
+				width: Dimensions.get('window').width,
+				height: Dimensions.get('window').height - 44
+			}
+		})
+	}
+}
+
 const styles = StyleSheet.create({
-	container: {
-		width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-		paddingBottom: 40
-	},
 	providerContainer: {
 		flex: 2,
 		alignItems: 'center',

@@ -6,7 +6,8 @@ import {
   Text, 
   View, 
   StyleSheet,
-  Dimensions,
+	Dimensions,
+	Platform,
   Alert
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
@@ -41,6 +42,7 @@ export default class QRScanner extends React.Component {
         </Text>
       )
     } else {
+			const bottomOverlay = getBottomOverlayStyle()
       return (
         <View style={ styles.container }>
           <BarCodeScanner style={ styles.scanner } onBarCodeRead={ this.handleQRCodeResult }>
@@ -50,7 +52,7 @@ export default class QRScanner extends React.Component {
               <View style={ styles.frame } />
               <View style={ styles.verticalOverlay } />
             </View>
-            <View style={ styles.horizontalOverlay } />
+            <View style={ bottomOverlay.horizontalOverlay } />
           </BarCodeScanner>
         </View>
       )
@@ -115,6 +117,29 @@ export default class QRScanner extends React.Component {
 		}
 	}
 
+}
+
+const getBottomOverlayStyle = () => {
+	if (Platform.OS === 'android') {
+		return StyleSheet.create({
+			horizontalOverlay: {
+				flex: 1,
+				marginTop: 16,
+				backgroundColor: 'rgba(52, 52, 52, 0.75)',
+				width: Dimensions.get('window').width * 1.0,
+				height: Dimensions.get('window').height * 0.25
+			}
+		})
+	} else {
+		return StyleSheet.create({
+			horizontalOverlay: {
+				flex: 1,
+				backgroundColor: 'rgba(52, 52, 52, 0.75)',
+				width: Dimensions.get('window').width * 1.0,
+				height: Dimensions.get('window').height * 0.25
+			}
+		})
+	}
 }
 
 const styles = StyleSheet.create({

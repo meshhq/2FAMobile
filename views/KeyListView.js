@@ -31,12 +31,14 @@ export default class KeyListView extends React.Component {
 		try {
 			await Device.getDeviceInfo()
 			await this.refreshData()
-			this.counter()
+			if (this.state.data && this.state.data.length > 0) {
+				this.counter()
+			}
 		} catch (error) {
 			console.log('Key List View Will Mount Error: ', error)
 		}
 	}
-	
+
 	componentWillUnmount() {
 		clearTimeout(this.state.timeoutId)
 	}
@@ -95,10 +97,6 @@ export default class KeyListView extends React.Component {
 		return this.refreshData()
 	}
 
-  navigate = () => {
-    this.props.navigation.navigate('QRScanner')
-  }
-
   render() {
     if (this.state.isLoading === true) {
       return (
@@ -156,13 +154,15 @@ const styles = StyleSheet.create({
 	},
 	noAccountsContainer: {
 		flex: 1,
-		justifyContent: 'space-between',
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	noAccountsLabel: {
 		flex: 1,
 		color: '#63acff',
-		fontSize: 28
+		fontSize: 28,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	flatList: {
 		margin: 8

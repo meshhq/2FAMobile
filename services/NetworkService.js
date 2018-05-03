@@ -49,22 +49,7 @@ export default class NetworkService {
 			console.log('Create Key Error: ', error)
 		})
 	}
-
-	static async crush(device, QRData) {
-			return await fetch('https://jsonplaceholder.typicode.com' + '/posts/1', {
-				method: 'GET',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				}
-			})
-			.then((response) => {
-				return response.json()
-			})
-			.catch((error) => {
-				console.log('Create Key Error: ', error)
-			})
-	}
+	
 	/**
 	 * A `PUT` method to update a key with the given data in the 
 	 * Request body.

@@ -7,24 +7,36 @@ import { getKeysResponse } from '../tests/MockResponses'
 
 export default class Key {
 
-	static async getDummyKeyData() {
-		let dummyString = await AsyncStorage.getItem(allKeyData)
-		if (!dummyString) {
-			const keyData = getKeysResponse()
-			await AsyncStorage.setItem(allKeyData, JSON.stringify(keyData.data))
-			dummyString = await AsyncStorage.getItem(allKeyData)
+	/**
+	 * Will create a new key.
+	 * @param {object} keyData 
+	 */
+	static async addKey(keyData) {
+		let allData = await Key.getAllKeyData()
+		if (!allData) {
+			allData = [keyData]
+		} else {
+			allData.push(keyData)	
 		}
-		return JSON.parse(dummyString)
+		await AsyncStorage.setItem(allKeyData, JSON.stringify(allData))
 	}
 
 	/**
-	 * Will create a new key.
-	 * @param {object} KeyData 
+	 * Will update an existing key in the
+	 * local store
+	 * @param {object} keyData 
 	 */
-	static async addOrUpdateKey(keyData) {
-		const allData = await Key.getAllKeyData()
-		allData.push(keyData)
-		await AsyncStorage.setItem(allKeyData, JSON.stringify(allData))
+	static async updateKey(keyData) {
+		const allData = await AsyncStorage.getItem(allKeyData)
+		const parsedData = JSON.parse(allData)
+		for (let index = 0; index < parsedData.length; index++) {
+			const element = parsedData[index]
+			if (element.ID === keyData.ID) {
+				parsedData[index] = keyData
+				break
+			}
+		}
+		return AsyncStorage.setItem(allKeyData, JSON.stringify(parsedData))
 	}
 
 	/**
@@ -48,8 +60,7 @@ export default class Key {
 		const data = await AsyncStorage.getItem(allKeyData)
 		if (!data) {
 			// Back out if we don't have any Ids.
-			// TODO: Need to Change to NULL
-			return Key.getDummyKeyData()
+			return null
 		}
 		return JSON.parse(data)
 	}

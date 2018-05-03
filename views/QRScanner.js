@@ -20,7 +20,8 @@ export default class QRScanner extends React.Component {
 	 */
 	state = {
 		hasCameraPermission: null,
-		alertShowing: false
+		alertShowing: false,
+		addedCode: null
   }
   
   /**
@@ -28,7 +29,12 @@ export default class QRScanner extends React.Component {
 	 */
 	async componentWillMount() {
 		const { status } = await Permissions.askAsync(Permissions.CAMERA)
-		this.setState({ hasCameraPermission: status === 'granted' })
+		const params = this.props.navigation.state.params
+		console.log('Got params: ', this.props.navigation)
+		this.setState({ 
+			addedCode: params.addedCode,
+			hasCameraPermission: status === 'granted'
+		})
 	}
 
   render() {
@@ -63,10 +69,12 @@ export default class QRScanner extends React.Component {
 	 * Will handle the QR Key payload after a scan occurs 
 	 */
 	handleQRCodeResult = (result) => {
+		console.log('Result: ', result)
 		if (this.state.alertShowing === false) {
-			Device.getDeviceInfo()
+			return Device.getDeviceInfo()
 				.then((deviceInfo) => {
 					const keyData = this.createKeyData(result.data)
+					console.log('keyData: ', keyData)
 					return Key.addOrUpdateKey(keyData)
 				})
 				.then(() => {
@@ -96,6 +104,7 @@ export default class QRScanner extends React.Component {
 	 * Set the state to indicate that we're ready for another scan.
 	 */
 	alertWasDismissed = () => {
+		this.state.addedCode()
 		this.setState({ alertShowing: false })
 	}
 
@@ -108,11 +117,14 @@ export default class QRScanner extends React.Component {
 		const date = Utilities.getCurrentFormattedDate()
 		const issuer = Utilities.getParameterByName('issuer', dataURI)
 		const secret = Utilities.getParameterByName('secret', dataURI)
+		const code = Utilities.generateTokenFromSecret(secret)
+		const randomId = Math.random().toString()
 		return {
-			ID: Math.random.toString(),
+			ID: randomId,
 			date: date,
 			issuer: issuer,
 			secret: secret,
+			code: code,
 			key: '123456789987654321'
 		}
 	}

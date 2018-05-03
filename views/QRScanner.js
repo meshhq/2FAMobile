@@ -2,6 +2,9 @@ import React from 'react'
 import Key from '../models/Key'
 import Device from '../models/Device'
 import Utilities from '../Utilities'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import Actions from '../actions/index'
 import {
   Text, 
   View, 
@@ -12,7 +15,7 @@ import {
 } from 'react-native'
 import { BarCodeScanner, Permissions } from 'expo'
 
-export default class QRScanner extends React.Component {
+class QRScanner extends React.Component {
 
   /**
 	 * Set default state with the camera permission status and whether
@@ -29,10 +32,7 @@ export default class QRScanner extends React.Component {
 	 */
 	async componentWillMount() {
 		const { status } = await Permissions.askAsync(Permissions.CAMERA)
-		const params = this.props.navigation.state.params
-		console.log('Got params: ', this.props.navigation)
 		this.setState({ 
-			addedCode: params.addedCode,
 			hasCameraPermission: status === 'granted'
 		})
 	}
@@ -69,27 +69,15 @@ export default class QRScanner extends React.Component {
 	 * Will handle the QR Key payload after a scan occurs 
 	 */
 	handleQRCodeResult = (result) => {
-		console.log('Result: ', result)
 		if (this.state.alertShowing === false) {
 			return Device.getDeviceInfo()
 				.then((deviceInfo) => {
-					const keyData = this.createKeyData(result.data)
-					console.log('keyData: ', keyData)
-					return Key.addOrUpdateKey(keyData)
+					return this.props.keyActions.postNewKey(deviceInfo, result)
 				})
 				.then(() => {
 					this.showAlert('Scan Success!', 'View your key on the home screen')
 				})    
 		}
-	}
-
-	/**
-	 * Will handle the Response sent back from the server
-	 * and save it to the local store.
-	 */
-	handleKeysResponse = (response) => {
-		// TODO: Need to confirm this response has everything we need
-		return KeyModel.addOrUpdateKey(response)
 	}
 
 	/**
@@ -104,7 +92,6 @@ export default class QRScanner extends React.Component {
 	 * Set the state to indicate that we're ready for another scan.
 	 */
 	alertWasDismissed = () => {
-		this.state.addedCode()
 		this.setState({ alertShowing: false })
 	}
 
@@ -130,6 +117,20 @@ export default class QRScanner extends React.Component {
 	}
 
 }
+
+function mapStateToProps(state) {
+	return {
+		data: state.key.keys
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		keyActions: bindActionCreators(Actions.KeyActions)
+	}
+}
+
+export const QRScannerComponent = connect(mapStateToProps, mapDispatchToProps)(QRScanner)
 
 const getBottomOverlayStyle = () => {
 	if (Platform.OS === 'android') {

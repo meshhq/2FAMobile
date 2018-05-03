@@ -1,30 +1,56 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Provider } from 'react-redux'
+import configureStore from './store'
+import { loadState } from './store/LocalStorage'
+import { StyleSheet, View } from 'react-native'
 import { StackNavigator } from 'react-navigation'
-import QRScanner from './views/QRScanner'
+import { QRScannerComponent } from './views/QRScanner'
 import QRHeaderButton from './views/QRHeaderButton'
-import KeyListView from './views/KeyListView'
+import { KeyListComponent } from './views/KeyListView'
 import KeyDetailView from './views/KeyDetailView'
 
 import Key from './models/Key'
 
 export default class App extends React.Component {
   
+  state = {
+    appStore: undefined
+  }
+
   async componentWillMount() {
     await Key.wipeLocalStore()
+
+    const persistedState = await loadState()
+    let appStore
+    if (!persistedState) {
+      appStore = configureStore({})
+    } else {
+      appStore = configureStore(persistedState)
+    }
+    this.setState({
+      appStore: appStore
+    })
   }
 
   render() {
-    return (
-      <MainNavigator />
-    )
+    if (this.state.appStore === undefined) {
+      return (
+        <View />
+      )
+    } else {
+      return (
+        <Provider store={ this.state.appStore }>
+          <MainNavigator />
+        </Provider>
+      )
+    }
   }
 
 }
 
 const MainNavigator = StackNavigator({
   Main: {
-    screen: KeyListView,
+    screen: KeyListComponent,
     title: 'Home',
     navigationOptions:({navigation}) => ({
       headerRight:(
@@ -39,7 +65,7 @@ const MainNavigator = StackNavigator({
     })
   },
   QRScanner: {
-    screen: QRScanner,
+    screen: QRScannerComponent,
     title: 'Scan a QR Code',
     navigationOptions:({navigation}) => {
     }

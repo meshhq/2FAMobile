@@ -16,7 +16,7 @@ export default class KeyListViewCell extends React.Component {
 	 * from the cell pressed.
 	 */
 	cellPressed = () => {
-		this.props.navigation.navigate('Detail', { updateCode: this.updateCode, keyData: this.props.keyData })
+		this.props.navigation.navigate('Detail', { updateCode: this.updateCode, keyId: this.props.keyData.id })
 	}
 
 	/**

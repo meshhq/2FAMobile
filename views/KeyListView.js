@@ -2,6 +2,9 @@ import React from 'react'
 import Device from '../models/Device'
 import Key from '../models/Key'
 import KeyListViewCell from './KeyListViewCell'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import Actions from '../actions/index'
 import { 
 	FlatList, 
   StyleSheet,
@@ -11,7 +14,7 @@ import {
 	Alert
 } from 'react-native'
 
-export default class KeyListView extends React.Component {
+class KeyListView extends React.Component {
 
   /**
 	 * 'refreshing' is required as a prop for the built in "Pull to Refresh" on the
@@ -19,23 +22,18 @@ export default class KeyListView extends React.Component {
 	 */
 	state = {
 		isLoading: true,
-		refreshing: false, 
-		data: [],
-		timeLeft: 0
+		refreshing: false,
+		timeLeft: 0,
+		timeoutId: ''
   }
   
   /**
-	 * Will refresh the FlatList data when the Component mounts.
+	 * Will begin the counter if there are any keys
+	 * in the redux store.
 	 */
 	async componentWillMount() {
-		try {
-			await Device.getDeviceInfo()
-			await this.refreshData()
-			if (this.state.data && this.state.data.length > 0) {
-				this.counter()
-			}
-		} catch (error) {
-			console.log('Key List View Will Mount Error: ', error)
+		if (this.props.data && this.props.data.length > 0) {
+			this.counter()
 		}
 	}
 
@@ -52,32 +50,14 @@ export default class KeyListView extends React.Component {
 
   updateTime = async () => {
 		const theDate = new Date()
-		// console.log('Main Tick ', theDate.getSeconds())
     if (theDate.getSeconds() === 0) {
 			await Key.updateAllCodes()
-			await this.refreshData()
 		}
 		return this.counter()
 	}
-
-  /**
-	 * Will retrieve all the Keys from the local store and refresh the table.
-	 */
-	refreshData = async () => {
-		try {
-			const allKeyData = await Key.getAllKeyData()
-			return this.setState({
-				isLoading: false,
-				data: allKeyData
-			})
-		} catch (error) {
-			console.log('Error: ', error)
-		}
-  }
 	
 	updateCodes = async () => {
 		await Key.updateAllCodes()
-		await this.refreshData()
 	}
 
   /**
@@ -107,7 +87,7 @@ export default class KeyListView extends React.Component {
         </View>
       )
     } else {
-      if (!this.state.data || this.state.data.length === 0) {
+      if (!this.props.data || this.props.data.length === 0) {
         return (
           <View style={ styles.container }>
             <View style={ styles.noAccountsContainer }>
@@ -119,7 +99,7 @@ export default class KeyListView extends React.Component {
         return (
           <View style={ styles.container }>
             <FlatList
-              data={ this.state.data }
+              data={ this.props.data }
               renderItem={({item}) => <KeyListViewCell 
                             keyData={item} 
                             navigation={this.props.navigation} 
@@ -138,6 +118,20 @@ export default class KeyListView extends React.Component {
   }
 
 }
+
+function mapStateToProps(state) {
+	return {
+		data: state.key.keys
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		keyActions: bindActionCreators(Actions.KeyActions)
+	}
+}
+
+export const KeyListComponent = connect(mapStateToProps)(KeyListView)
 
 const styles = StyleSheet.create({
 	container: {

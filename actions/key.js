@@ -1,4 +1,3 @@
-import { Dispatch, Action, ActionCreatorsMapObject } from 'redux'
 import NetworkService from '../services/NetworkService'
 import Key from '../models/Key'
 
@@ -9,26 +8,47 @@ export const refreshKeys = (userId) => (dispatch) => {
     .then((keys) => {
       return refreshKeysAction(keys)
     })
+    .then((action) => {
+      return dispatch(action)
+    })
 }
 
 export const postNewKey = (device, QRData) => (dispatch) => {
   return NetworkService.createKey(device, QRData)
-    .then((keyData) => {
-      return Key.addOrUpdateKey(keyData)
+    .then(() => {
+      return NetworkService.getKeys(device.uuid)
+    })
+    .then((keys) => {
+      return refreshKeysAction(keys)
+    })
+    .then((action) => {
+      return dispatch(action)
     })
 }
 
 export const deleteKey = (keyId) => (dispatch) => {
   return NetworkService.deleteKey(keyId)
     .then(() => {
-      return Key.deleteKey(keyId)
+      return NetworkService.getKeys(device.uuid)
+    })
+    .then((keys) => {
+      return refreshKeysAction(keys)
+    })
+    .then((action) => {
+      return dispatch(action)
     })
 }
 
-export const updateKey = (updateData, keyData) => (dispatch) => {
+export const updateKey = (device, updateData, keyData) => (dispatch) => {
   return NetworkService.updateKey(updateData, keyData)
-    .then((newKeyData) => {
-      return Key.addOrUpdateKey(newKeyData)
+    .then(() => {
+      return NetworkService.getKeys(device.uuid)
+    })
+    .then((keys) => {
+      return refreshKeysAction(keys)
+    })
+    .then((action) => {
+      return dispatch(action)
     })
 }
 

@@ -16,7 +16,7 @@ export default class KeyListViewCell extends React.Component {
 	 * from the cell pressed.
 	 */
 	cellPressed = () => {
-		this.props.navigation.navigate('Detail', { updateCode: this.updateCode, keyId: this.props.keyData.id })
+		this.props.navigation.navigate('Detail', { updateCode: this.updateCode, keyData: this.props.keyData })
 	}
 
 	/**
@@ -46,11 +46,12 @@ export default class KeyListViewCell extends React.Component {
 				onPress: () => { this.deleteRow() }
 			}
 		]
+		console.log('KeyData ', this.props.keyData)
 		return (
 			<Swipeout right={swipeOutButtons}>
 				<TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
 					<View>
-						<Text style={ styles.titleLabel }>{ this.props.keyData.provider }</Text>
+						<Text style={ styles.titleLabel }>{ this.props.keyData.issuer }</Text>
 						<Text style={ styles.subtitleLabel }>{ this.props.keyData.code }</Text>
 					</View>
 					<View>

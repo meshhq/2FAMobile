@@ -1,9 +1,11 @@
 import CombinedReducers from '../reducers'
 import { saveState } from './LocalStorage'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
 
 export default function configureStore(initialState) {
-  const store = createStore(CombinedReducers, initialState)
+  const middleware = applyMiddleware(thunk)
+  const store = createStore(CombinedReducers, initialState, middleware)
   addSubscribersToStore(store)
   return store
 }

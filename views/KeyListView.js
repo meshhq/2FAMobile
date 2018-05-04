@@ -21,7 +21,7 @@ class KeyListView extends React.Component {
 	 * FlatList. 'data' will be used to populate the FlatList cells.
 	 */
 	state = {
-		isLoading: true,
+		isLoading: false,
 		refreshing: false,
 		timeLeft: 0,
 		timeoutId: ''
@@ -127,11 +127,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		keyActions: bindActionCreators(Actions.KeyActions)
+		keyActions: bindActionCreators(Actions.KeyActions, dispatch)
 	}
 }
 
-export const KeyListComponent = connect(mapStateToProps)(KeyListView)
+export const KeyListComponent = connect(mapStateToProps, mapDispatchToProps)(KeyListView)
 
 const styles = StyleSheet.create({
 	container: {

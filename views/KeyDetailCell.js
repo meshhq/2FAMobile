@@ -15,8 +15,12 @@ import Utilities from '../Utilities'
 import PropTypes from 'prop-types'
 import NetworkService from '../services/NetworkService'
 import Key from '../models/Key'
+import Device from '../models/Device'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import Actions from '../actions/index'
 
-export default class KeyDetailCell extends React.Component {
+class KeyDetailCell extends React.Component {
 
 	state = {
 		timeLeft: 30,
@@ -28,7 +32,7 @@ export default class KeyDetailCell extends React.Component {
 	 * Will refresh token in componentWillMount
 	 */
 	async componentWillMount() {
-		const keyData = await Key.getKeyWithId(this.props.keyId)
+		const keyData = await Key.getKeyWithId(this.props.keyData.ID)
 		this.setState({
 			timeLeft: this.getTimeLeft(),
 			keyData: keyData
@@ -58,28 +62,25 @@ export default class KeyDetailCell extends React.Component {
 	/**
 	 * Will update the time on the counter.
 	 */
-  updateTime = () => {
+  updateTime = async () => {
 		// console.log('Detail Tick ', this.state.timeLeft)
 		const time = this.state.timeLeft - 1
 		if (time < 0) {
-			this.updateCode()
+			// this.updateCode()
+			const oldData = this.state.keyData
+			const newData = JSON.parse(JSON.stringify(this.state.keyData))
+			const device = await Device.getDeviceInfo()
+			newData.code = Utilities.generateTokenFromSecret(this.state.keyData.secret)
+			await this.props.keyActions.updateKey(device, newData, oldData)
+			this.setState({
+				timeLeft: (time < 0) ? 30 : time,
+				keyData: newData
+			})
 		}
     this.setState({
-      timeLeft: (time < 0) ? 30 : time
+			timeLeft: (time < 0) ? 30 : time
     })
     this.counter()
-  }
-
-	/**
-	 * This function will fire once the 30 second timer is up. It will
-	 * fetch a new key from the server and restart the timer.
-	 */
-	updateCode = async () => {
-		await this.props.updateCode()
-		const updatedKey = await Key.getKeyWithId(this.props.keyId)
-		this.setState({
-			keyData: updatedKey
-		})
 	}
 
 	getTimeLeft = () => {
@@ -147,6 +148,20 @@ export default class KeyDetailCell extends React.Component {
 	}
 
 }
+
+function mapStateToProps(state) {
+	return {
+		data: state.key.keys
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		keyActions: bindActionCreators(Actions.KeyActions, dispatch)
+	}
+}
+
+export const KeyDetailComponent = connect(mapStateToProps, mapDispatchToProps)(KeyDetailCell)
 
 KeyDetailCell.propTypes = {
   keyData: PropTypes.object

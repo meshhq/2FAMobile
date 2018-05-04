@@ -72,7 +72,7 @@ class QRScanner extends React.Component {
 		if (this.state.alertShowing === false) {
 			return Device.getDeviceInfo()
 				.then((deviceInfo) => {
-					return this.props.keyActions.postNewKey(deviceInfo, result)
+					return this.props.keyActions.postNewKey(deviceInfo.uuid, result)
 				})
 				.then(() => {
 					this.showAlert('Scan Success!', 'View your key on the home screen')
@@ -95,42 +95,15 @@ class QRScanner extends React.Component {
 		this.setState({ alertShowing: false })
 	}
 
-	/**
-	 * Parse the QR Code URI for the secret and issuer. Then
-	 * we'll build the object that will be sent to the server.
-	 * @param {string} dataURI
-	 */
-	createKeyData = (dataURI) => {
-		const date = Utilities.getCurrentFormattedDate()
-		const issuer = Utilities.getParameterByName('issuer', dataURI)
-		const secret = Utilities.getParameterByName('secret', dataURI)
-		const code = Utilities.generateTokenFromSecret(secret)
-		const randomId = Math.random().toString()
-		return {
-			ID: randomId,
-			date: date,
-			issuer: issuer,
-			secret: secret,
-			code: code,
-			key: '123456789987654321'
-		}
-	}
-
-}
-
-function mapStateToProps(state) {
-	return {
-		data: state.key.keys
-	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		keyActions: bindActionCreators(Actions.KeyActions)
+		keyActions: bindActionCreators(Actions.KeyActions, dispatch)
 	}
 }
 
-export const QRScannerComponent = connect(mapStateToProps, mapDispatchToProps)(QRScanner)
+export const QRScannerComponent = connect(null, mapDispatchToProps)(QRScanner)
 
 const getBottomOverlayStyle = () => {
 	if (Platform.OS === 'android') {

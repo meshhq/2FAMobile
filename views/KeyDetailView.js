@@ -1,7 +1,7 @@
 import React from 'react'
-import KeyDetailCell from './KeyDetailCell'
 import PropTypes from 'prop-types'
 import Utilities from '../Utilities'
+import { KeyDetailComponent } from './KeyDetailCell'
 import {
     View, 
     StyleSheet,
@@ -51,7 +51,7 @@ export default class KeyDetailView extends React.Component {
 	 */
 	cellForItem = (item) => {
 		return (
-			<KeyDetailCell keyId={ item.item.ID } updateCode={ this.state.updateCode }/>
+			<KeyDetailComponent keyData={ item.item } updateCode={ this.state.updateCode }/>
 		)
 	}
 

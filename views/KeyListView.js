@@ -33,9 +33,7 @@ class KeyListView extends React.Component {
 	 * in the redux store.
 	 */
 	async componentWillMount() {
-		if (this.props.data && this.props.data.length > 0) {
-			this.counter()
-		}
+		this.counter()
 	}
 
 	componentWillUnmount() {
@@ -51,14 +49,15 @@ class KeyListView extends React.Component {
 
   updateTime = async () => {
 		const theDate = new Date()
-    if (theDate.getSeconds() === 0) {
-			await Key.updateAllCodes()
+    if (this.props.data && this.props.data.length > 0 && theDate.getSeconds() === 0) {
+			await this.updateCodes()
 		}
 		return this.counter()
 	}
 	
 	updateCodes = async () => {
 		await Key.updateAllCodes()
+		await this.props.keyActions.refreshKeys()
 	}
 
   /**

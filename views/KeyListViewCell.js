@@ -1,6 +1,10 @@
 import React from 'react'
 import Key from '../models/Key'
+import Device from '../models/Device'
 import Swipeout from 'react-native-swipeout'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import Actions from '../actions/index'
 import {
   View,
   Text,
@@ -9,7 +13,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 
-export default class KeyListViewCell extends React.Component {
+class KeyListViewCell extends React.Component {
 
   /**
 	 * Will push the KeyListViewCell on screen with the Key data
@@ -22,19 +26,9 @@ export default class KeyListViewCell extends React.Component {
 	/**
 	 * Action taken when the swipe to delete button is pressed.
 	 */
-	deleteRow = () => {
-		return NetworkService.deleteKey(this.props.keyData.id)
-			.then((response) => {
-				return Key.deleteKey(this.props.keyData.id)
-			})
-			.then(() => {
-				// This is passed through from the KeyListView
-				this.props.deleteHandler()
-			})
-	}
-
-	updateCode = async (newCode) => {
-		return this.props.updateHandler()
+	deleteRow = async () => {
+		const device = await Device.getDeviceInfo()
+		this.props.keyActions.deleteKey(device, this.props.keyData.ID)
 	}
 
 	render() {
@@ -46,7 +40,6 @@ export default class KeyListViewCell extends React.Component {
 				onPress: () => { this.deleteRow() }
 			}
 		]
-		console.log('KeyData ', this.props.keyData)
 		return (
 			<Swipeout right={swipeOutButtons}>
 				<TouchableOpacity onPress={ this.cellPressed } style={ styles.container }>
@@ -57,7 +50,7 @@ export default class KeyListViewCell extends React.Component {
 					<View>
 						<Image
 							style={ styles.imageStyle }
-							source={require('../resources/disclosure-indicator.png')}
+							source={ require('../resources/disclosure-indicator.png') }
 						/>
 					</View>
 				</TouchableOpacity>
@@ -66,6 +59,14 @@ export default class KeyListViewCell extends React.Component {
 	}
 
 }
+
+function mapDispatchToProps(dispatch) {
+	return {
+		keyActions: bindActionCreators(Actions.KeyActions, dispatch)
+	}
+}
+
+export const KeyListCellComponent = connect(null, mapDispatchToProps)(KeyListViewCell)
 
 const styles = StyleSheet.create({
 	container: {

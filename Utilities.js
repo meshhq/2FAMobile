@@ -61,10 +61,22 @@ export default class Utilities {
 	 * This will also reset the 30 second timer.
 	 */
 	static generateTokenFromSecret = (secret) => {
-		console.log('Updating code for: ', secret)
 		const otp = new OTP(secret)
 		const newToken = otp.getToken()
 		return newToken
+	}
+
+	/**
+	 * Will create a random UUID for this device that will serve
+	 * as the Id passed to the server to get all this User's keys.
+	 */
+	static createDeviceId = () => {
+		function section() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+				.toString(16)
+				.substring(1);
+		}
+		return section() + section() + '-' + section() + '-' + section() + '-' + section() + '-' + section() + section() + section()
 	}
 
 }

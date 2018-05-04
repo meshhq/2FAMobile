@@ -24,9 +24,9 @@ export default class Device {
 	 * Create and save the UUID and device meta data.
 	 */
 	static async saveDeviceInfo() {
-		const randomID = Math.random().toString()
+		const uuid = Utilities.createDeviceId()
 		const device = {
-			uuid: randomID,
+			uuid: uuid,
 			date: Utilities.getCurrentFormattedDate()
 		}
 		try {

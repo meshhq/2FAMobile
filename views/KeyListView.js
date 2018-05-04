@@ -1,7 +1,8 @@
 import React from 'react'
 import Device from '../models/Device'
 import Key from '../models/Key'
-import KeyListViewCell from './KeyListViewCell'
+import NoKeyViewCell from './NoKeyViewCell'
+import { KeyListCellComponent } from './KeyListViewCell'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Actions from '../actions/index'
@@ -90,9 +91,11 @@ class KeyListView extends React.Component {
       if (!this.props.data || this.props.data.length === 0) {
         return (
           <View style={ styles.container }>
-            <View style={ styles.noAccountsContainer }>
-              <Text style={ styles.noAccountsLabel }>No keys found.</Text>
-            </View>
+            <FlatList
+							data={ [{ key : 'one' }] }
+							renderItem={ ({ item }) => <NoKeyViewCell /> }
+							keyExtractor={(item, index) => item.key}
+						/>
           </View>
         )
       } else {
@@ -100,11 +103,9 @@ class KeyListView extends React.Component {
           <View style={ styles.container }>
             <FlatList
               data={ this.props.data }
-              renderItem={({item}) => <KeyListViewCell 
+              renderItem={({item}) => <KeyListCellComponent 
                             keyData={item} 
-                            navigation={this.props.navigation} 
-														deleteHandler={this.deleteHandler}
-														updateHandler={this.updateCodes}
+                            navigation={this.props.navigation}
                           />}
               keyExtractor={(item, index) => item.key}
               refreshing= { this.state.refreshing }
@@ -145,18 +146,6 @@ const styles = StyleSheet.create({
 	spinnerContainer: {
 		flex: 1,
 		justifyContent: 'center'
-	},
-	noAccountsContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	noAccountsLabel: {
-		flex: 1,
-		color: '#63acff',
-		fontSize: 28,
-		justifyContent: 'center',
-		alignItems: 'center',
 	},
 	flatList: {
 		margin: 8

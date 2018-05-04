@@ -63,10 +63,8 @@ class KeyDetailCell extends React.Component {
 	 * Will update the time on the counter.
 	 */
   updateTime = async () => {
-		// console.log('Detail Tick ', this.state.timeLeft)
 		const time = this.state.timeLeft - 1
 		if (time < 0) {
-			// this.updateCode()
 			const oldData = this.state.keyData
 			const newData = JSON.parse(JSON.stringify(this.state.keyData))
 			const device = await Device.getDeviceInfo()

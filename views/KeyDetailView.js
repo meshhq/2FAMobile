@@ -51,7 +51,7 @@ export default class KeyDetailView extends React.Component {
 	 */
 	cellForItem = (item) => {
 		return (
-			<KeyDetailComponent keyData={ item.item } updateCode={ this.state.updateCode }/>
+			<KeyDetailComponent keyData={ item.item } />
 		)
 	}
 

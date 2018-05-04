@@ -26,7 +26,7 @@ export const postNewKey = (device, QRData) => (dispatch) => {
     })
 }
 
-export const deleteKey = (keyId) => (dispatch) => {
+export const deleteKey = (device, keyId) => (dispatch) => {
   return NetworkService.deleteKey(keyId)
     .then(() => {
       return NetworkService.getKeys(device.uuid)

@@ -3,6 +3,10 @@ import Key from '../models/Key'
 
 export const REFRESH_KEYS = 'REFRESH_KEYS'
 
+/**
+ * Will get all the keys for this device's uuid.
+ * @param {string} userId 
+ */
 export const refreshKeys = (userId) => (dispatch) => {
   return NetworkService.getKeys(userId)
     .then((keys) => {
@@ -13,6 +17,11 @@ export const refreshKeys = (userId) => (dispatch) => {
     })
 }
 
+/**
+ * Will add a new key attached to this device's uuid.
+ * @param {Device} device 
+ * @param {Object} QRData 
+ */
 export const postNewKey = (device, QRData) => (dispatch) => {
   return NetworkService.createKey(device, QRData)
     .then(() => {
@@ -26,6 +35,11 @@ export const postNewKey = (device, QRData) => (dispatch) => {
     })
 }
 
+/**
+ * Will delete the key for the given Id.
+ * @param {Device} device 
+ * @param {Object} keyId 
+ */
 export const deleteKey = (device, keyId) => (dispatch) => {
   return NetworkService.deleteKey(keyId)
     .then(() => {
@@ -39,6 +53,12 @@ export const deleteKey = (device, keyId) => (dispatch) => {
     })
 }
 
+/**
+ * Update an existing Key with the new data provided.
+ * @param {Device} device 
+ * @param {Object} updateData 
+ * @param {Object} keyData 
+ */
 export const updateKey = (device, updateData, keyData) => (dispatch) => {
   return NetworkService.updateKey(updateData, keyData)
     .then(() => {

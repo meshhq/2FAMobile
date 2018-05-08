@@ -8,18 +8,16 @@ import {
 	deleteKeysResponse
 } from './MockResponses'
 
-const LOCAL_SERVER_IS_RUNNING = false
+
 var nock = require('nock');
 
-if (LOCAL_SERVER_IS_RUNNING === 'FALSE') {
-	let scope = nock('http://localhost:1323')
+let scope = nock('http://localhost:1323')
 	.post('/keys').reply(200, createKeyResponse())
 	.put('/keys/1').reply(200, updateKeyResponse())
 	.get('/keys?user_id=MeshStudio').reply(200, getKeysResponse())
 	.delete('/keys/1').reply(200, deleteKeysResponse()).persist()
-}
 
-describe.skip('Network Controller', () => {
+describe.only('Network Controller', () => {
 	it('createKey()', () => {
 		return NetworkService.createKey(dummyDeviceData, dummyQRData)
 			.then((json) => {
@@ -41,8 +39,7 @@ describe.skip('Network Controller', () => {
 			})
 	})
 	it('getKeys()', async () => {
-		const keyData = await createNewKey()
-		return NetworkService.getKeys(keyData.user_id)
+		return NetworkService.getKeys('MeshStudio')
 			.then((json) => {
 				expect(json).not.toEqual(null)
 				expect(json.data).not.toEqual(null)
@@ -73,6 +70,6 @@ const dummyQRData = {
 }
 
 const dummyDeviceData = {
-  uuid: Math.random(),
+  uuid: Utilities.createDeviceId(),
   date: Utilities.getCurrentFormattedDate()
 }
